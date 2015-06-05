@@ -1,3 +1,16 @@
+# Compiled output
+STM32F4_USB_MP3/*
+*.ld
+helix/Makefile
+
+# docs are included in the source, for whatever reason :(
+*.html
+*.pdf
+*.txt
+
+# leftover SVN junk
+helix/*/CVS
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
