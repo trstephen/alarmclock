@@ -8,6 +8,10 @@ helix/Makefile
 *.pdf
 *.txt
 
+# IDE stuff
+*.cogui
+*.comarker
+
 # leftover SVN junk
 helix/*/CVS
 
