@@ -13,6 +13,8 @@
 #include "audioMP3.h"
 #include "main.h"
 
+static const uint32_t digit_8 = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14;
+
 //structures
 RCC_ClocksTypeDef RCC_Clocks;
 GPIO_InitTypeDef	GPIOInitStruct;
@@ -23,7 +25,7 @@ EXTI_InitTypeDef EXTI_InitStructure;
 
 //function prototypes
 void configuration(void);
-;
+void clockTest(void);
 
 
 //global variables
@@ -33,6 +35,8 @@ int interruptOccurred = 0;
 extern volatile int exitMp3 = 0;
 extern volatile int mp3PlayingFlag = 0;
 extern volatile int snoozeMemory = 0;
+
+volatile uint16_t *activeClockDigit;
 
 /*for testing
 uint32_t *ptr;
@@ -63,7 +67,45 @@ void TIM5_IRQHandler(void)
 	     //clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
 
+	     clockTest();
     }
+}
+
+/*
+ * clocktest
+ * input: null
+ * output: null
+ * desc:
+ */
+void clockTest(void)
+{
+	GPIO_ResetBits(GPIOD, *activeClockDigit);
+	GPIO_ResetBits(GPIOE, digit_8);  // clears all digits
+
+	switch (*activeClockDigit)
+	{
+		case GPIO_Pin_7:
+			*activeClockDigit = GPIO_Pin_8;
+			break;
+		case GPIO_Pin_8:
+			*activeClockDigit = GPIO_Pin_9;
+			break;
+		case GPIO_Pin_9:
+			*activeClockDigit = GPIO_Pin_10;
+			break;
+		case GPIO_Pin_10:
+			*activeClockDigit = GPIO_Pin_11;
+			break;
+		case GPIO_Pin_11:
+			*activeClockDigit = GPIO_Pin_7;
+			break;
+		default:
+			break;
+	}
+
+	// find the new time digit, but it's always 8 for now ;)
+	GPIO_SetBits(GPIOE, digit_8);
+	GPIO_SetBits(GPIOD, *activeClockDigit);
 }
 
 //alarm A interrupt handler

@@ -86,19 +86,19 @@
   <Files>
     <File name="STM32_USB_HOST_Library/MSC/usbh_msc_bot.c" path="STM32_USB_HOST_Library/Class/MSC/src/usbh_msc_bot.c" type="1"/>
     <File name="inc/Audio.h" path="inc/Audio.h" type="1"/>
-    <File name="usbh_usr.c" path="usbh_usr.c" type="1"/>
     <File name="helix/pub/imdct.c" path="helix/real/imdct.c" type="1"/>
+    <File name="usbh_usr.c" path="usbh_usr.c" type="1"/>
     <File name="syscalls.c" path="syscalls.c" type="1"/>
-    <File name="cmsis_boot" path="" type="2"/>
     <File name="STM32_USB_HOST_Library/CORE/usbh_core.c" path="STM32_USB_HOST_Library/Core/src/usbh_core.c" type="1"/>
-    <File name="STM32F4XX_STDPERIPH_DRIVER/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>
+    <File name="cmsis_boot" path="" type="2"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_rcc.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c" type="1"/>
+    <File name="STM32F4XX_STDPERIPH_DRIVER/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>
     <File name="helix/pub" path="" type="2"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_i2c.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c" type="1"/>
     <File name="helix/pub/bitstream.c" path="helix/real/bitstream.c" type="1"/>
     <File name="system_stm32f4xx.c" path="system_stm32f4xx.c" type="1"/>
-    <File name="helix/pub/dequant.c" path="helix/real/dequant.c" type="1"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_pwr.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_pwr.c" type="1"/>
+    <File name="helix/pub/dequant.c" path="helix/real/dequant.c" type="1"/>
     <File name="STM32_USB_HOST_Library/MSC/usbh_msc_fatfs.c" path="STM32_USB_HOST_Library/Class/MSC/src/usbh_msc_fatfs.c" type="1"/>
     <File name="helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="cmsis_boot/startup_stm32f4xx.c" path="cmsis_boot/startup_stm32f4xx.c" type="1"/>
@@ -106,11 +106,11 @@
     <File name="STM32_USB_HOST_Library/CORE/usbh_stdreq.c" path="STM32_USB_HOST_Library/Core/src/usbh_stdreq.c" type="1"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_dac.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c" type="1"/>
     <File name="STM32_USB_OTG_Driver" path="" type="2"/>
-    <File name="FAT_FS" path="" type="2"/>
     <File name="audioMP3.c" path="audioMP3.c" type="1"/>
+    <File name="FAT_FS" path="" type="2"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_dma.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c" type="1"/>
-    <File name="helix/real" path="" type="2"/>
     <File name="helix/pub/subband.c" path="helix/real/subband.c" type="1"/>
+    <File name="helix/real" path="" type="2"/>
     <File name="STM32_USB_HOST_Library/MSC" path="" type="2"/>
     <File name="inc/usbd_conf.h" path="inc/usbd_conf.h" type="1"/>
     <File name="helix/pub/polyphase.c" path="helix/real/polyphase.c" type="1"/>
@@ -118,10 +118,10 @@
     <File name="FAT_FS/fattime.c" path="fat_fs/src/fattime.c" type="1"/>
     <File name="helix" path="" type="2"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_exti.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c" type="1"/>
-    <File name="STM32F4-Discovery/stm32f4_discovery_lis302dl.c" path="STM32F4-Discovery/stm32f4_discovery_lis302dl.c" type="1"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_usart.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c" type="1"/>
-    <File name="helix/mp3tabs.c" path="helix/mp3tabs.c" type="1"/>
+    <File name="STM32F4-Discovery/stm32f4_discovery_lis302dl.c" path="STM32F4-Discovery/stm32f4_discovery_lis302dl.c" type="1"/>
     <File name="inc/stm32f4xx_it.h" path="inc/stm32f4xx_it.h" type="1"/>
+    <File name="helix/mp3tabs.c" path="helix/mp3tabs.c" type="1"/>
     <File name="STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_spi.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c" type="1"/>
     <File name="STM32_USB_OTG_Driver/usb_hcd.c" path="STM32_USB_OTG_Driver/src/usb_hcd.c" type="1"/>
     <File name="inc/usb_conf.h" path="inc/usb_conf.h" type="1"/>
@@ -153,8 +153,8 @@
     <File name="helix/pub/dct32.c" path="helix/real/dct32.c" type="1"/>
     <File name="FAT_FS/ff.c" path="fat_fs/src/ff.c" type="1"/>
     <File name="inc/audioMP3.h" path="inc/audioMP3.h" type="1"/>
-    <File name="STM32F4-Discovery/stm32f4_discovery.c" path="STM32F4-Discovery/stm32f4_discovery.c" type="1"/>
     <File name="inc/stm32f4xx_conf.h" path="inc/stm32f4xx_conf.h" type="1"/>
+    <File name="STM32F4-Discovery/stm32f4_discovery.c" path="STM32F4-Discovery/stm32f4_discovery.c" type="1"/>
     <File name="main.c" path="main.c" type="1"/>
   </Files>
 </Project>
