@@ -2,22 +2,23 @@
 //When the alarm triggers, it plays mp3 files through a USB connected on the
 //micro USB port
 
-#include "stm32f4xx_rtc.h"
-#include "stm32f4xx_rcc.h"
+#include "audioMP3.h"
+#include "clock_display.h"
+#include "main.h"
+#include "misc.h"
+#include "stm32f4xx_dac.h"
+#include "stm32f4xx_exti.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_pwr.h"
-#include "stm32f4xx_dac.h"
+#include "stm32f4xx_rtc.h"
+#include "stm32f4xx_rcc.h"
 #include "stm32f4xx_tim.h"
-#include "misc.h"
-#include "stm32f4xx_exti.h"
-#include "audioMP3.h"
-#include "main.h"
 
-static const uint32_t digit_8 = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14;
+//static const uint32_t digit_8 = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14;
 
 //structures
 RCC_ClocksTypeDef RCC_Clocks;
-GPIO_InitTypeDef	GPIOInitStruct;
+GPIO_InitTypeDef	initStruct;
 TIM_TimeBaseInitTypeDef TIM_InitStruct;
 NVIC_InitTypeDef NVIC_InitStructure;
 EXTI_InitTypeDef EXTI_InitStructure;
@@ -36,7 +37,7 @@ extern volatile int exitMp3 = 0;
 extern volatile int mp3PlayingFlag = 0;
 extern volatile int snoozeMemory = 0;
 
-volatile uint16_t *activeClockDigit;
+volatile uint16_t *currentClockSegment = GPIO_Pin_7;
 
 /*for testing
 uint32_t *ptr;
@@ -68,6 +69,7 @@ void TIM5_IRQHandler(void)
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
 
 	     clockTest();
+	     //ClockDisplay_Test(*currentClockSegment);
     }
 }
 
@@ -79,33 +81,34 @@ void TIM5_IRQHandler(void)
  */
 void clockTest(void)
 {
-	GPIO_ResetBits(GPIOD, *activeClockDigit);
+	GPIO_ResetBits(GPIOD, *currentClockSegment);
 	GPIO_ResetBits(GPIOE, digit_8);  // clears all digits
 
-	switch (*activeClockDigit)
+	switch (*currentClockSegment)
 	{
 		case GPIO_Pin_7:
-			*activeClockDigit = GPIO_Pin_8;
+			*currentClockSegment = GPIO_Pin_8;
 			break;
 		case GPIO_Pin_8:
-			*activeClockDigit = GPIO_Pin_9;
+			*currentClockSegment = GPIO_Pin_9;
 			break;
 		case GPIO_Pin_9:
-			*activeClockDigit = GPIO_Pin_10;
+			*currentClockSegment = GPIO_Pin_10;
 			break;
 		case GPIO_Pin_10:
-			*activeClockDigit = GPIO_Pin_11;
+			*currentClockSegment = GPIO_Pin_11;
 			break;
 		case GPIO_Pin_11:
-			*activeClockDigit = GPIO_Pin_7;
+			*currentClockSegment = GPIO_Pin_7;
 			break;
 		default:
+			*currentClockSegment = GPIO_Pin_7;
 			break;
 	}
 
 	// find the new time digit, but it's always 8 for now ;)
 	GPIO_SetBits(GPIOE, digit_8);
-	GPIO_SetBits(GPIOD, *activeClockDigit);
+	GPIO_SetBits(GPIOD, *currentClockSegment);
 }
 
 //alarm A interrupt handler
@@ -213,31 +216,33 @@ void configuration(void)
 	  NVIC_Init( &NVIC_InitStructure );
 
 	  //IO for push buttons using internal pull-up resistors
-	  GPIO_StructInit( &GPIOInitStruct );
-	  GPIOInitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_11;
-	  GPIOInitStruct.GPIO_Speed = GPIO_Speed_2MHz;
-	  GPIOInitStruct.GPIO_Mode = GPIO_Mode_IN;
-	  GPIOInitStruct.GPIO_OType = GPIO_OType_PP;
-	  GPIOInitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-	  GPIO_Init(GPIOC, &GPIOInitStruct);
+	  GPIO_StructInit( &initStruct );
+	  initStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_11;
+	  initStruct.GPIO_Speed = GPIO_Speed_2MHz;
+	  initStruct.GPIO_Mode = GPIO_Mode_IN;
+	  initStruct.GPIO_OType = GPIO_OType_PP;
+	  initStruct.GPIO_PuPd = GPIO_PuPd_UP;
+	  GPIO_Init(GPIOC, &initStruct);
 
 	  //configure GPIO for digits
-	  GPIO_StructInit( &GPIOInitStruct );
-	  GPIOInitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-	  GPIOInitStruct.GPIO_Speed = GPIO_Speed_2MHz;
-	  GPIOInitStruct.GPIO_Mode = GPIO_Mode_OUT;
-	  GPIOInitStruct.GPIO_OType = GPIO_OType_PP;
-	  GPIOInitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	  GPIO_Init(GPIOE, &GPIOInitStruct);
+	  GPIO_StructInit( &initStruct );
+	  initStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+	  initStruct.GPIO_Speed = GPIO_Speed_2MHz;
+	  initStruct.GPIO_Mode = GPIO_Mode_OUT;
+	  initStruct.GPIO_OType = GPIO_OType_PP;
+	  initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	  GPIO_Init(GPIOE, &initStruct);
 
 	  //configure GPIO for multiplexing
-	  GPIO_StructInit( &GPIOInitStruct );
-	  GPIOInitStruct.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
-	  GPIOInitStruct.GPIO_Speed = GPIO_Speed_2MHz;
-	  GPIOInitStruct.GPIO_Mode = GPIO_Mode_OUT;
-	  GPIOInitStruct.GPIO_OType = GPIO_OType_PP;
-	  GPIOInitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	  GPIO_Init(GPIOD, &GPIOInitStruct);
+	  GPIO_StructInit( &initStruct );
+	  initStruct.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
+	  initStruct.GPIO_Speed = GPIO_Speed_2MHz;
+	  initStruct.GPIO_Mode = GPIO_Mode_OUT;
+	  initStruct.GPIO_OType = GPIO_OType_PP;
+	  initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	  GPIO_Init(GPIOD, &initStruct);
+
+	  //ClockDisplay_GPIO_Init( &initStruct );
 
 	  //enables RTC alarm A interrupt
 	  RTC_ITConfig(RTC_IT_ALRA, ENABLE);
