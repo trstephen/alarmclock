@@ -15,6 +15,9 @@ helix/Makefile
 # leftover SVN junk
 helix/*/CVS
 
+# KiCAD autosave files
+_autosave-*
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
