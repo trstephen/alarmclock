@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 5 5
 Title ""
-Date "16 jun 2015"
+Date "19 jun 2015"
 Rev ""
 Comp ""
 Comment1 ""
@@ -175,21 +175,6 @@ S4
 Text GLabel 6650 2650 2    60   Input ~ 0
 S5
 NoConn ~ 6150 2750
-Text GLabel 8750 1150 0    60   Input ~ 0
-AudioIn
-Wire Wire Line
-	8750 1150 9250 1150
-Wire Wire Line
-	9250 850  9250 1550
-Wire Wire Line
-	9250 850  9650 850 
-Wire Wire Line
-	9800 1550 10200 1550
-Connection ~ 9250 1150
-Text GLabel 9650 850  2    60   Output ~ 0
-PA4
-Text GLabel 10200 1550 2    60   Output ~ 0
-AudiojackOut
 $Comp
 L CONN_2 P6
 U 1 1 557F4CC4
@@ -205,19 +190,6 @@ Text GLabel 9250 3900 0    60   Input ~ 0
 AudiojackOut
 Text GLabel 9250 4100 0    60   Input ~ 0
 AudioJackGrnd
-$Comp
-L R R19
-U 1 1 557F4CDA
-P 9550 1550
-F 0 "R19" V 9630 1550 40  0000 C CNN
-F 1 "R" V 9557 1551 40  0000 C CNN
-F 2 "~" V 9480 1550 30  0000 C CNN
-F 3 "~" H 9550 1550 30  0000 C CNN
-	1    9550 1550
-	0    -1   -1   0   
-$EndComp
-Wire Wire Line
-	9250 1550 9300 1550
 $Comp
 L STM32_F4_DISCOVERY STM1
 U 1 1 55807EE7
