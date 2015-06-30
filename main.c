@@ -26,7 +26,6 @@ EXTI_InitTypeDef EXTI_InitStructure;
 
 //function prototypes
 void configuration(void);
-void clockTest(void);
 
 
 //global variables
@@ -37,7 +36,7 @@ extern volatile int exitMp3 = 0;
 extern volatile int mp3PlayingFlag = 0;
 extern volatile int snoozeMemory = 0;
 
-volatile uint16_t currentClockSegment = GPIO_Pin_7;
+volatile uint16_t currentClockSegment = DIGIT_H10;
 
 /*for testing
 uint32_t *ptr;
@@ -45,7 +44,6 @@ uint32_t *ptr2;*/
 
 int main(void)
 {
-
   configuration();
 
   while ( 1 )
@@ -72,44 +70,6 @@ void TIM5_IRQHandler(void)
     }
 }
 
-/*
- * clocktest
- * input: null
- * output: null
- * desc:
- */
-void clockTest(void)
-{
-	GPIO_ResetBits(GPIOD, currentClockSegment);
-	GPIO_ResetBits(GPIOE, digit_8);  // clears all digits
-
-	switch (currentClockSegment)
-	{
-		case GPIO_Pin_7:
-			currentClockSegment = GPIO_Pin_8;
-			break;
-		case GPIO_Pin_8:
-			currentClockSegment = GPIO_Pin_9;
-			break;
-		case GPIO_Pin_9:
-			currentClockSegment = GPIO_Pin_10;
-			break;
-		case GPIO_Pin_10:
-			currentClockSegment = GPIO_Pin_11;
-			break;
-		case GPIO_Pin_11:
-			currentClockSegment = GPIO_Pin_7;
-			break;
-		default:
-			currentClockSegment = GPIO_Pin_7;
-			break;
-	}
-
-	// find the new time digit, but it's always 8 for now ;)
-	GPIO_SetBits(GPIOE, digit_8);
-	GPIO_SetBits(GPIOD, currentClockSegment);
-}
-
 //alarm A interrupt handler
 //when alarm occurs, clear all the interrupt bits and flags
 //then set the flag to play mp3
@@ -125,15 +85,7 @@ void RTC_Alarm_IRQHandler(void)
 		interruptOccurred = 1;
 
 	  }
-
-
 }
-
-
-
-
-
-
 
 //configures the clocks, gpio, alarm, interrupts etc.
 void configuration(void)

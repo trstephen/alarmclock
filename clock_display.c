@@ -11,7 +11,7 @@
 
 void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct)
 {
-	//configure GPIO for digits
+	//configure GPIO for segments
 	GPIO_StructInit( initStruct );
 	initStruct->GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
@@ -20,7 +20,7 @@ void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct)
 	initStruct->GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(GPIOE, initStruct);
 
-	//configure GPIO for multiplexing
+	//configure GPIO for digit multiplexing
 	GPIO_StructInit( initStruct );
 	initStruct->GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
 	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
@@ -32,39 +32,45 @@ void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct)
 
 void ClockDisplay_Test(uint16_t *currentClockSegment)
 {
-	GPIO_ResetBits(GPIOD, *currentClockSegment);
-	GPIO_ResetBits(GPIOE, digit_8);  // clears all digits
+	ClockDisplay_Clear();
+
 	uint32_t currentDigit;
 
 	switch (*currentClockSegment)
 	{
-		case GPIO_Pin_7:  // H10
-			*currentClockSegment = GPIO_Pin_8;
-			currentDigit = digit_1;
+		case DIGIT_M01:
+			*currentClockSegment = DIGIT_H10;
+			currentDigit = display_1;
 			break;
-		case GPIO_Pin_8:  // H1
-			*currentClockSegment = GPIO_Pin_9;
-			currentDigit = digit_2;
+		case DIGIT_H10:
+			*currentClockSegment = DIGIT_H01;
+			currentDigit = display_2;
 			break;
-		case GPIO_Pin_9:  // :
-			*currentClockSegment = GPIO_Pin_10;
-			currentDigit = digit_colon;
+		case DIGIT_H01:
+			*currentClockSegment = DIGIT_COLON;
+			currentDigit = display_colon;
 			break;
-		case GPIO_Pin_10: // M10
-			*currentClockSegment = GPIO_Pin_11;
-			currentDigit = digit_3;
+		case DIGIT_COLON:
+			*currentClockSegment = DIGIT_M10;
+			currentDigit = display_1;
 			break;
-		case GPIO_Pin_11: // M1
-			*currentClockSegment = GPIO_Pin_7;
-			currentDigit = digit_4;
+		case DIGIT_M10:
+			*currentClockSegment = DIGIT_M01;
+			currentDigit = display_2;
 			break;
 		default:
-			*currentClockSegment = GPIO_Pin_7;
-			currentDigit = digit_8;
+			*currentClockSegment = DIGIT_H10;
+			currentDigit = display_8;
 			break;
 	}
 
-	// find the new time digit, but it's always 8 for now ;)
+	// find the new time digit, later~~~~
+	GPIO_ResetBits(GPIOD, *currentClockSegment);
 	GPIO_SetBits(GPIOE, currentDigit);
-	GPIO_SetBits(GPIOD, currentClockSegment);
+}
+
+void ClockDisplay_Clear()
+{
+	GPIO_SetBits(GPIOD, digit_all);
+	GPIO_ResetBits(GPIOE, display_all);
 }
