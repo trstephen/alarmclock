@@ -14,8 +14,6 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_tim.h"
 
-//static const uint32_t digit_8 = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14;
-
 //structures
 RCC_ClocksTypeDef RCC_Clocks;
 GPIO_InitTypeDef	initStruct;
@@ -63,7 +61,8 @@ void TIM5_IRQHandler(void)
 	//double checks that interrupt has occurred
 	if( TIM_GetITStatus( TIM5, TIM_IT_Update ) != RESET )
 	{
-	     ClockDisplay_Test(&currentClockSegment);
+	     //ClockDisplay_Test(&currentClockSegment);
+		ClockDisplay_TimeTest(&currentClockSegment);
 
 		//clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
