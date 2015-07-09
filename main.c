@@ -88,6 +88,52 @@ void RTC_Alarm_IRQHandler(void)
 	  }
 }
 
+// PinC6-9 Handler
+void EXTI9_5_IRQHandler(void)
+{
+	if( EXTI_GetITStatus(EXTI_Line5) != RESET)
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+
+		EXTI_ClearITPendingBit(EXTI_Line5);
+	}
+	else if( EXTI_GetITStatus(EXTI_Line6) != RESET)
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+
+		EXTI_ClearITPendingBit(EXTI_Line6);
+	}
+	else if( EXTI_GetITStatus(EXTI_Line7) != RESET)
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+
+		EXTI_ClearITPendingBit(EXTI_Line7);
+	}
+	else if( EXTI_GetITStatus(EXTI_Line8) != RESET)
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+
+		EXTI_ClearITPendingBit(EXTI_Line8);
+	}
+	else if( EXTI_GetITStatus(EXTI_Line9) != RESET)
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+
+		EXTI_ClearITPendingBit(EXTI_Line9);
+	}
+}
+
+// PinC10 Handler
+void EXTI15_10_IRQHandler(void)
+{
+	if( EXTI_GetITStatus(EXTI_Line10) != RESET)
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+
+		EXTI_ClearITPendingBit(EXTI_Line10);
+	}
+}
+
 //configures the clocks, gpio, alarm, interrupts etc.
 void configuration(void)
 {
@@ -167,18 +213,11 @@ void configuration(void)
 	  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	  NVIC_Init( &NVIC_InitStructure );
 
-	  //IO for push buttons using internal pull-up resistors
-	  GPIO_StructInit( &initStruct );
-	  initStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_11;
-	  initStruct.GPIO_Speed = GPIO_Speed_2MHz;
-	  initStruct.GPIO_Mode = GPIO_Mode_IN;
-	  initStruct.GPIO_OType = GPIO_OType_PP;
-	  initStruct.GPIO_PuPd = GPIO_PuPd_UP;
-	  GPIO_Init(GPIOC, &initStruct);
+	  Buttons_Init();
 
-	  Audio_GPIO_Init( &initStruct );
+	  Audio_Init();
 
-	  ClockDisplay_GPIO_Init( &initStruct );
+	  ClockDisplay_Init();
 
 	  //enables RTC alarm A interrupt
 	  RTC_ITConfig(RTC_IT_ALRA, ENABLE);

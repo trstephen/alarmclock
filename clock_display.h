@@ -22,6 +22,7 @@ static const uint16_t display_8 = GPIO_Pin_13;
 static const uint16_t display_9 = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13;
 static const uint16_t display_colon = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
 static const uint16_t display_all = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
+static const GPIO_TypeDef* display_bank = GPIOE;
 
 /*
 static const uint16_t display_numbers[12] = {
@@ -63,21 +64,20 @@ typedef enum {
 #define DIGIT_M10 GPIO_Pin_8
 #define DIGIT_M01 GPIO_Pin_7
 static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
+static const GPIO_TypeDef* digit_bank = GPIOD;
 
 // Global variables
 extern volatile uint16_t currentClockSegment;
 
 /*
- * ClockDisplay_GPIO_Init
+ * ClockDisplay_Init
  *
- * input: 	a GPIO init struct. Not necessary, since it will be cleared before
- * 		  	it is used, but this maintains symmetry with the other init calls
- * 		  	in main.
+ * input: 	null
  * 	output: null
  * 	descr: 	Initializes GPIO pins for controlling the digit selection diodes
  * 			(GPIOE) and the segment selection diodes (GPIOD).
  */
-void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct);
+void ClockDisplay_Init();
 
 /*
  * ClockDisplay_Test

@@ -87,12 +87,13 @@
     <File name="custom/src/clock_display.c" path="clock_display.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_OTG_Driver" path="" type="2"/>
     <File name="audio/helix/mp3dec.c" path="helix/mp3dec.c" type="1"/>
+    <File name="custom/inc/buttons.h" path="buttons.h" type="1"/>
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_hcd_int.c" path="STM32_USB_OTG_Driver/src/usb_hcd_int.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_usart.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_tim.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_stdreq.c" path="STM32_USB_HOST_Library/Core/src/usbh_stdreq.c" type="1"/>
-    <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_core.c" path="STM32_USB_HOST_Library/Core/src/usbh_core.c" type="1"/>
     <File name="audio/helix/pub/bitstream.c" path="helix/real/bitstream.c" type="1"/>
+    <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_core.c" path="STM32_USB_HOST_Library/Core/src/usbh_core.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_dac.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c" type="1"/>
     <File name="core/FAT_FS/fattime.c" path="fat_fs/src/fattime.c" type="1"/>
     <File name="audio/STM32_USB_DEVICE/usbd_conf.h" path="inc/usbd_conf.h" type="1"/>
@@ -107,8 +108,8 @@
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_hcd.c" path="STM32_USB_OTG_Driver/src/usb_hcd.c" type="1"/>
     <File name="audio/helix/pub/polyphase.c" path="helix/real/polyphase.c" type="1"/>
     <File name="core" path="" type="2"/>
-    <File name="core/syscalls.c" path="syscalls.c" type="1"/>
     <File name="main.h" path="main.h" type="1"/>
+    <File name="core/syscalls.c" path="syscalls.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_hcs.c" path="STM32_USB_HOST_Library/Core/src/usbh_hcs.c" type="1"/>
     <File name="custom/src" path="" type="2"/>
     <File name="audio/helix/pub/dqchan.c" path="helix/real/dqchan.c" type="1"/>
@@ -151,16 +152,17 @@
     <File name="audio/helix/pub/imdct.c" path="helix/real/imdct.c" type="1"/>
     <File name="audio/helix/pub/buffers.c" path="helix/real/buffers.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_conf.h" path="inc/usb_conf.h" type="1"/>
+    <File name="custom/src/buttons.c" path="buttons.c" type="1"/>
     <File name="audio/Audio.c" path="Audio.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library" path="" type="2"/>
     <File name="core/system_stm32f4xx.c" path="system_stm32f4xx.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_bsp.c" path="usb_bsp.c" type="1"/>
     <File name="audio/helix/pub/dct32.c" path="helix/real/dct32.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_usr.c" path="usbh_usr.c" type="1"/>
-    <File name="core/cmsis_boot/startup_stm32f4xx.c" path="cmsis_boot/startup_stm32f4xx.c" type="1"/>
-    <File name="audio/helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="audio/helix/pub/stproc.c" path="helix/real/stproc.c" type="1"/>
+    <File name="audio/helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/MSC/usbh_msc_bot.c" path="STM32_USB_HOST_Library/Class/MSC/src/usbh_msc_bot.c" type="1"/>
+    <File name="core/cmsis_boot/startup_stm32f4xx.c" path="cmsis_boot/startup_stm32f4xx.c" type="1"/>
     <File name="STM32_bsp" path="" type="2"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/MSC" path="" type="2"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>

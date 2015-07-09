@@ -9,27 +9,27 @@
 
 #include "clock_display.h"
 
-//extern volatile uint16_t currentClockSegment;
-
-void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct)
+void ClockDisplay_Init()
 {
+	GPIO_InitTypeDef initStruct;
+
 	//configure GPIO for segments
-	GPIO_StructInit( initStruct );
-	initStruct->GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
-	initStruct->GPIO_Mode = GPIO_Mode_OUT;
-	initStruct->GPIO_OType = GPIO_OType_PP;
-	initStruct->GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOE, initStruct);
+	GPIO_StructInit( &initStruct );
+	initStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+	initStruct.GPIO_Speed = GPIO_Speed_2MHz;
+	initStruct.GPIO_Mode = GPIO_Mode_OUT;
+	initStruct.GPIO_OType = GPIO_OType_PP;
+	initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOE, &initStruct);
 
 	//configure GPIO for digit multiplexing
-	GPIO_StructInit( initStruct );
-	initStruct->GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
-	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
-	initStruct->GPIO_Mode = GPIO_Mode_OUT;
-	initStruct->GPIO_OType = GPIO_OType_PP;
-	initStruct->GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOD, initStruct);
+	GPIO_StructInit( &initStruct );
+	initStruct.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
+	initStruct.GPIO_Speed = GPIO_Speed_2MHz;
+	initStruct.GPIO_Mode = GPIO_Mode_OUT;
+	initStruct.GPIO_OType = GPIO_OType_PP;
+	initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, &initStruct);
 }
 
 void ClockDisplay_GPIO_Init_Oops(GPIO_InitTypeDef* initStruct)
@@ -151,8 +151,8 @@ void ClockDisplay_TimeTest()
 
 	uint16_t currentDigit = ClockDisplay_AssignTimeDigit(&time);
 
-	GPIO_ResetBits(GPIOD, currentClockSegment);
-	GPIO_SetBits(GPIOE, currentDigit);
+	GPIO_ResetBits(digit_bank, currentClockSegment);
+	GPIO_SetBits(display_bank, currentDigit);
 }
 
 uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
