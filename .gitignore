@@ -5,7 +5,7 @@ helix/Makefile
 
 # docs are included in the source, for whatever reason :(
 *.html
-*.pdf
+#*.pdf
 *.txt
 
 # IDE stuff
