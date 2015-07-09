@@ -1,0 +1,15 @@
+EESchema-DOCLIB  Version 2.0  Date: Mon 01 Jun 2015 10:57:56 AM PDT
+#
+$CMP ARDUINO_UNO
+D Arduino Uno
+$ENDCMP
+#
+$CMP RES
+D Resistor
+$ENDCMP
+#
+$CMP STM32_F4_DISCOVERY
+D STM32F4 Discovery Board
+$ENDCMP
+#
+#End Doc Library
