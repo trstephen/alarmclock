@@ -9,6 +9,8 @@
 
 #include "clock_display.h"
 
+//extern volatile uint16_t currentClockSegment;
+
 void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct)
 {
 	//configure GPIO for segments
@@ -23,6 +25,27 @@ void ClockDisplay_GPIO_Init(GPIO_InitTypeDef* initStruct)
 	//configure GPIO for digit multiplexing
 	GPIO_StructInit( initStruct );
 	initStruct->GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
+	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
+	initStruct->GPIO_Mode = GPIO_Mode_OUT;
+	initStruct->GPIO_OType = GPIO_OType_PP;
+	initStruct->GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, initStruct);
+}
+
+void ClockDisplay_GPIO_Init_Oops(GPIO_InitTypeDef* initStruct)
+{
+	//configure GPIO for segments
+	GPIO_StructInit( initStruct );
+	initStruct->GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_10;
+	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
+	initStruct->GPIO_Mode = GPIO_Mode_OUT;
+	initStruct->GPIO_OType = GPIO_OType_PP;
+	initStruct->GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOB, initStruct);
+
+	//configure GPIO for digit multiplexing
+	GPIO_StructInit( initStruct );
+	initStruct->GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_15;
 	initStruct->GPIO_Speed = GPIO_Speed_2MHz;
 	initStruct->GPIO_Mode = GPIO_Mode_OUT;
 	initStruct->GPIO_OType = GPIO_OType_PP;
@@ -69,47 +92,74 @@ void ClockDisplay_Test(uint16_t *currentClockSegment)
 	GPIO_SetBits(GPIOE, currentDigit);
 }
 
-void ClockDisplay_TimeTest(uint16_t *currentClockSegment)
+void ClockDisplay_Test_Oops(uint16_t *currentClockSegment, GPIO_TypeDef* GPIOx, uint16_t H10, uint16_t H01)
+{
+	GPIO_SetBits(GPIOx, H10 | H01);
+	GPIO_ResetBits(GPIOE, display_all);
+
+	uint32_t currentDigit;
+
+	if (*currentClockSegment == H01)
+	{
+		*currentClockSegment = H10;
+		currentDigit = display_2;
+	}
+	else if (*currentClockSegment == H10)
+	{
+		*currentClockSegment = H01;
+		currentDigit = display_1;
+	}
+	else
+	{
+		*currentClockSegment = H01;
+		currentDigit = display_1;
+	}
+
+	GPIO_SetBits(GPIOE, currentDigit);
+	GPIO_ResetBits(GPIOx, *currentClockSegment);
+}
+
+void ClockDisplay_TimeTest()
 {
 	ClockDisplay_Clear();
+
+	switch (currentClockSegment)
+	{
+		case DIGIT_M01:
+			currentClockSegment = DIGIT_H10;
+			break;
+		case DIGIT_H10:
+			currentClockSegment = DIGIT_H01;
+			break;
+		case DIGIT_H01:
+			currentClockSegment = DIGIT_COLON;
+			break;
+		case DIGIT_COLON:
+			currentClockSegment = DIGIT_M10;
+			break;
+		case DIGIT_M10:
+			currentClockSegment = DIGIT_M01;
+			break;
+		default:
+			currentClockSegment = DIGIT_H10;
+			break;
+	}
 
 	RTC_TimeTypeDef time;
 
 	RTC_GetTime(RTC_HourFormat_12, &time);
 
-	switch (*currentClockSegment)
-	{
-		case DIGIT_M01:
-			*currentClockSegment = DIGIT_H10;
-			break;
-		case DIGIT_H10:
-			*currentClockSegment = DIGIT_H01;
-			break;
-		case DIGIT_H01:
-			*currentClockSegment = DIGIT_COLON;
-			break;
-		case DIGIT_COLON:
-			*currentClockSegment = DIGIT_M10;
-			break;
-		case DIGIT_M10:
-			*currentClockSegment = DIGIT_M01;
-			break;
-		default:
-			*currentClockSegment = DIGIT_H10;
-			break;
-	}
+	uint16_t currentDigit = ClockDisplay_AssignTimeDigit(&time);
 
-	uint16_t currentDigit = ClockDisplay_AssignTimeDigit(currentClockSegment, &time);
-
-	GPIO_ResetBits(GPIOD, *currentClockSegment);
+	GPIO_ResetBits(GPIOD, currentClockSegment);
 	GPIO_SetBits(GPIOE, currentDigit);
 }
 
-uint16_t ClockDisplay_AssignTimeDigit(uint16_t *currentClockSegment, RTC_TimeTypeDef *time)
+uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 {
 	uint16_t currentDigit = 0;
 
-	switch (*currentClockSegment) {
+	switch (currentClockSegment) {
 		case DIGIT_H10:
 			currentDigit = time->RTC_Minutes & 0x0F0;
 			break;

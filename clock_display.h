@@ -64,7 +64,8 @@ typedef enum {
 #define DIGIT_M01 GPIO_Pin_7
 static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
 
-//extern volatile RTC_TimeTypeDef		myclockTimeStruct;
+// Global variables
+extern volatile uint16_t currentClockSegment;
 
 /*
  * ClockDisplay_GPIO_Init
@@ -92,29 +93,23 @@ void ClockDisplay_Test(uint16_t *currentClockSegment);
 /*
  * ClockDisplay_TimeTest
  *
- * input:	uint16_t* currentClockSegment
- * 				the pin connected to the transistor that turns an entire
- * 				clock digit on or off
+ * input:	none
  * output:	none
  * descr:	Takes decodes the current time for myClockStruct (global) and displays it
  */
-void ClockDisplay_TimeTest(uint16_t *currentClockSegment);
-
+void ClockDisplay_TimeTest();
 
 /*
  * ClockDisplay_AssignTimeDigit
  *
- * input:	uint16_t* currentClockSegment
- * 				the pin connected to the transistor that turns an entire
- * 				clock digit on or off
- * 			RTC_TimeTypeDef* time
+ * input:	RTC_TimeTypeDef* time
  * 				current value of the RTC clock
  * 	output:	uint16_t
  * 				the pins needed to display the digit that corresponds to the current clock segment
  * 	descr:	Extracts the corresponding digit from time for the requested clock segment
  * 			and returns the pins needed to display it
  */
-uint16_t ClockDisplay_AssignTimeDigit(uint16_t *currentClockSegment, RTC_TimeTypeDef *time);
+uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time);
 
 /*
  * ClockDisplay_Clear
@@ -124,5 +119,9 @@ uint16_t ClockDisplay_AssignTimeDigit(uint16_t *currentClockSegment, RTC_TimeTyp
  * descr:	Sets all clock segments and digits to the OFF (low) position
  */
 void ClockDisplay_Clear();
+
+void ClockDisplay_GPIO_Init_Oops(GPIO_InitTypeDef* initStruct);
+
+void ClockDisplay_Test_Oops(uint16_t *currentClockSegment, GPIO_TypeDef* GPIOx, uint16_t H10, uint16_t H01);
 
 #endif /* CLOCK_DISPLAY_H_ */

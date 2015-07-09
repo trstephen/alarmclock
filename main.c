@@ -44,6 +44,9 @@ int main(void)
 {
   configuration();
 
+  // set audio enable pin to LOW to turn on LM386
+  GPIO_ResetBits(GPIOD, GPIO_Pin_6);
+
   while ( 1 )
   {
 		mp3PlayingFlag = 1;
@@ -61,8 +64,7 @@ void TIM5_IRQHandler(void)
 	//double checks that interrupt has occurred
 	if( TIM_GetITStatus( TIM5, TIM_IT_Update ) != RESET )
 	{
-	     //ClockDisplay_Test(&currentClockSegment);
-		ClockDisplay_TimeTest(&currentClockSegment);
+		ClockDisplay_TimeTest();
 
 		//clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
@@ -173,6 +175,8 @@ void configuration(void)
 	  initStruct.GPIO_OType = GPIO_OType_PP;
 	  initStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	  GPIO_Init(GPIOC, &initStruct);
+
+	  Audio_GPIO_Init( &initStruct );
 
 	  ClockDisplay_GPIO_Init( &initStruct );
 

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "stm32f4xx_gpio.h"
 
 typedef void AudioCallbackFunction(void *context,int buffer);
 
@@ -20,6 +21,19 @@ typedef void AudioCallbackFunction(void *context,int buffer);
 // Initialize and power up audio hardware. Use the above defines for the parameters.
 // Can probably only be called once.
 void InitializeAudio(int plln,int pllr,int i2sdiv,int i2sodd);
+
+/*
+ * Audio_GPIO_Init
+ *
+ * input: 	a GPIO init struct. Not necessary, since it will be cleared before
+ * 		  	it is used, but this maintains symmetry with the other init calls
+ * 		  	in main.
+ * 	output: null
+ * 	descr: 	Initializes the audio control pin (D6) to enable/disable the LM386.
+ * 			Not in InitializeAudio() since that is only invoked in playmp3() and the pin
+ * 			needs to be disabled prior to playback.
+ */
+void Audio_GPIO_Init( GPIO_InitTypeDef* initStruct );
 
 // Power up and down the audio hardware.
 void AudioOn();
