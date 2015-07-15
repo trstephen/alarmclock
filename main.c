@@ -3,6 +3,7 @@
 //micro USB port
 
 #include "audioMP3.h"
+#include "buttons.h"
 #include "clock_display.h"
 #include "main.h"
 #include "misc.h"
@@ -91,46 +92,40 @@ void RTC_Alarm_IRQHandler(void)
 // PinC6-9 Handler
 void EXTI9_5_IRQHandler(void)
 {
-	if( EXTI_GetITStatus(EXTI_Line5) != RESET)
+	if( EXTI_GetITStatus(GBtn_Music.interruptLine) != RESET)
 	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
 
-		EXTI_ClearITPendingBit(EXTI_Line5);
+		EXTI_ClearITPendingBit(GBtn_Music.interruptLine);
 	}
-	else if( EXTI_GetITStatus(EXTI_Line6) != RESET)
+	else if( EXTI_GetITStatus(GBtn_Hour.interruptLine) != RESET)
 	{
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
 
-		EXTI_ClearITPendingBit(EXTI_Line6);
+		EXTI_ClearITPendingBit(GBtn_Hour.interruptLine);
 	}
-	else if( EXTI_GetITStatus(EXTI_Line7) != RESET)
+	else if( EXTI_GetITStatus(GBtn_Minute.interruptLine) != RESET)
 	{
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
 
-		EXTI_ClearITPendingBit(EXTI_Line7);
+		EXTI_ClearITPendingBit(GBtn_Minute.interruptLine);
 	}
-	else if( EXTI_GetITStatus(EXTI_Line8) != RESET)
+	else if( EXTI_GetITStatus(GBtn_Time.interruptLine) != RESET)
 	{
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
 
-		EXTI_ClearITPendingBit(EXTI_Line8);
-	}
-	else if( EXTI_GetITStatus(EXTI_Line9) != RESET)
-	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-
-		EXTI_ClearITPendingBit(EXTI_Line9);
+		EXTI_ClearITPendingBit(GBtn_Time.interruptLine);
 	}
 }
 
 // PinC10 Handler
 void EXTI15_10_IRQHandler(void)
 {
-	if( EXTI_GetITStatus(EXTI_Line10) != RESET)
+	if( EXTI_GetITStatus(GBtn_Alarm.interruptLine) != RESET)
 	{
 		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
 
-		EXTI_ClearITPendingBit(EXTI_Line10);
+		EXTI_ClearITPendingBit(GBtn_Alarm.interruptLine);
 	}
 }
 

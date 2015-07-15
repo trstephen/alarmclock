@@ -19,7 +19,7 @@ void Buttons_Init()
 	EXTI_InitTypeDef EXTI_InitStruct;
 	NVIC_InitTypeDef NVIC_InitStruct;
 
-	// GPIOC clock enabled in main()
+	// GPIOC clock enabled in main(), left in for parity with example code
 	//RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 
 	// Enable clock for SYSCFG
@@ -27,18 +27,18 @@ void Buttons_Init()
 
 	// Set input pins
 	GPIO_StructInit( &GPIO_InitStruct );
-	GPIO_InitStruct.GPIO_Pin = SWITCH_1 | SWITCH_2 | SWITCH_3 | SWITCH_4 | SWITCH_5;
+	GPIO_InitStruct.GPIO_Pin = GBtn_Music.pin | GBtn_Hour.pin | GBtn_Minute.pin | GBtn_Time.pin | GBtn_Alarm.pin;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_Init(button_bank, &GPIO_InitStruct);
 
-	Buttons_LinkPinToInterrupt(EXTI_PinSource6, EXTI_Line6);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource7, EXTI_Line7);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource8, EXTI_Line8);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource9, EXTI_Line9);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource10, EXTI_Line10);
+	Buttons_LinkPinToInterrupt(EXTI_PinSource6, GBtn_Music.interruptLine);
+	Buttons_LinkPinToInterrupt(EXTI_PinSource7, GBtn_Hour.interruptLine);
+	Buttons_LinkPinToInterrupt(EXTI_PinSource8, GBtn_Minute.interruptLine);
+	Buttons_LinkPinToInterrupt(EXTI_PinSource9, GBtn_Time.interruptLine);
+	Buttons_LinkPinToInterrupt(EXTI_PinSource10, GBtn_Alarm.interruptLine);
 
 	// Add IRQ vector to NVIC (C5-9)
 	NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
