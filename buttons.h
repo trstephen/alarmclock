@@ -5,14 +5,10 @@
 #include "stm32f4xx_gpio.h"
 #include <stdbool.h>
 
-// Define the pins for each switch
-#define SWITCH_1 (GPIO_Pin_6)
-#define SWITCH_2 (GPIO_Pin_7)
-#define SWITCH_3 (GPIO_Pin_8)
-#define SWITCH_4 (GPIO_Pin_9)
-#define SWITCH_5 (GPIO_Pin_10)
+// Constants
 static const GPIO_TypeDef* button_bank = GPIOC;
 
+// Types
 typedef  struct
 {
 	uint16_t pin;			// the GPIO pin assigned to the button

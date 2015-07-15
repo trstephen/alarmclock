@@ -37,9 +37,6 @@ extern volatile int snoozeMemory = 0;
 
 volatile uint16_t currentClockSegment = DIGIT_H10;
 
-/*for testing
-uint32_t *ptr;
-uint32_t *ptr2;*/
 
 int main(void)
 {

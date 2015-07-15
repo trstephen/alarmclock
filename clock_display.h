@@ -9,52 +9,31 @@
  * digits / segments are included in the constants
  */
 
-// Digits represented by clock segments (complement)
-static const uint16_t display_0 = GPIO_Pin_12 | GPIO_Pin_13;
-static const uint16_t display_1 = GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
-static const uint16_t display_2 = GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_13;
-static const uint16_t display_3 = GPIO_Pin_10 | GPIO_Pin_11 |GPIO_Pin_13;
-static const uint16_t display_4 = GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10| GPIO_Pin_13;
-static const uint16_t display_5 = GPIO_Pin_7 | GPIO_Pin_10 |GPIO_Pin_13;
-static const uint16_t display_6 = GPIO_Pin_7 | GPIO_Pin_13;
-static const uint16_t display_7 = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
-static const uint16_t display_8 = GPIO_Pin_13;
-static const uint16_t display_9 = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13;
-static const uint16_t display_colon = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
-static const uint16_t display_all = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13;
+
 static const GPIO_TypeDef* display_bank = GPIOE;
 
-/*
-static const uint16_t display_numbers[12] = {
-		GPIO_Pin_12 | GPIO_Pin_13,
-		GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
-		display_2,
-		display_3,
-		display_4,
-		display_5,
-		display_6,
-		display_7,
-		display_8,
-		display_9,
-		display_colon,
-		display_all
+// helper enumerator so we can use indexing for numbers[] but still
+// access the colon and all segments values which have no obvious index
+enum extraNumbers {
+		COLON = 10,
+		ALL,
 };
 
-typedef enum {
-	Display_0 = 0,
-	Display_1,
-	Display_2,
-	Display_3,
-	Display_4,
-	Display_5,
-	Display_6,
-	Display_7,
-	Display_8,
-	Display_9,
-	Display_colon,
-	Display_all
-}ClockDisplayT_Numbers;
-*/
+// a sum of pins needed to display numbers 0-9. Array index corresponds to display number
+static const uint16_t numbers[12] = {
+/* 0 */ 	GPIO_Pin_12 | GPIO_Pin_13,
+/* 1 */ 	GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
+/* 2 */ 	GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_13,
+/* 3 */ 	GPIO_Pin_10 | GPIO_Pin_11 |GPIO_Pin_13,
+/* 4 */ 	GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10| GPIO_Pin_13,
+/* 5 */		GPIO_Pin_7 | GPIO_Pin_10 |GPIO_Pin_13,
+/* 6 */ 	GPIO_Pin_7 | GPIO_Pin_13,
+/* 7 */ 	GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
+/* 8 */ 	GPIO_Pin_13,
+/* 9 */ 	GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13,
+/* COLON */ GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
+/* ALL */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
+};
 
 // Digits on the clock display
 // #defines are used because switch statements need a runtime constant (static const aren't runtime constants :( )
