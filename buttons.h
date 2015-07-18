@@ -1,7 +1,7 @@
 #ifndef BUTTONS_H_
 #define BUTTONS_H_
 
-#include "stm32f4xx_exti.h"
+#include "state_machine.h"
 #include "stm32f4xx_gpio.h"
 #include <stdbool.h>
 
@@ -9,49 +9,20 @@
 static const GPIO_TypeDef* button_bank = GPIOC;
 
 // Types
-typedef  struct
-{
-	uint16_t pin;			// the GPIO pin assigned to the button
-	uint32_t interruptLine; // button attached to this line
-	bool isPressed; 		// true if button is currently pressed
-	bool isLongPress;		// true if button has received a long press
+typedef struct Button{
+	uint16_t pin;					// the GPIO pin assigned to the button
+	bool isPressed; 				// true if button is currently pressed
+	bool isLongPress;				// true if button has received a long press
+	StateFunc_T shortPress_func;	// function pointer to the short press behavior
+	StateFunc_T longPress_func; 	// function pointer to the long press behavior
 }Button_T;
 
-// Global variables for buttons
-static volatile Button_T GBtn_Music = {
-	.pin = GPIO_Pin_6,
-	.interruptLine = EXTI_Line6,
-	.isPressed = false,
-	.isLongPress = false
-};
-
-static volatile Button_T GBtn_Hour = {
-	.pin = GPIO_Pin_7,
-	.interruptLine = EXTI_Line7,
-	.isPressed = false,
-	.isLongPress = false
-};
-
-static volatile Button_T GBtn_Minute = {
-	.pin = GPIO_Pin_8,
-	.interruptLine = EXTI_Line8,
-	.isPressed = false,
-	.isLongPress = false
-};
-
-static volatile Button_T GBtn_Time = {
-	.pin = GPIO_Pin_9,
-	.interruptLine = EXTI_Line9,
-	.isPressed = false,
-	.isLongPress = false
-};
-
-static volatile Button_T GBtn_Alarm = {
-	.pin = GPIO_Pin_10,
-	.interruptLine = EXTI_Line10,
-	.isPressed = false,
-	.isLongPress = false
-};
+// Globals
+extern volatile Button_T GBtn_Music;
+extern volatile Button_T GBtn_Hour;
+extern volatile Button_T GBtn_Minute;
+extern volatile Button_T GBtn_Time;
+extern volatile Button_T GBtn_Alarm;
 
 /*
  * Buttons_Init
@@ -64,18 +35,6 @@ static volatile Button_T GBtn_Alarm = {
  * 			The handlers are in main().
  */
 void Buttons_Init();
-
-/*
- * Buttons_LinkPinToInterrupt
- *
- *  input:	uint8_t pinSource
- *  			The pin to associate with the interrupt. Form EXTI_PinSourcex
- *  		uint32_t line
- *  			Interrupt line to tie to the pin. Form EXTI_Linex
- *  output:	none
- *  descr:	Configures EXTI for a given pin and line
- */
-void Buttons_LinkPinToInterrupt(uint8_t pinSource, uint32_t line);
 
 void Buttons_AssignStateFromStableInput(volatile Button_T *button);
 

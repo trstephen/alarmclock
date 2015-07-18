@@ -8,23 +8,15 @@
 #include "buttons.h"
 #include "misc.h"
 #include "stm32f4xx.h"
-#include "stm32f4xx_exti.h"
 #include "stm32f4xx_syscfg.h"
 #include "stm32f4xx_tim.h"
 
 void Buttons_Init()
 {
-	// www.stm32f4-discovery.com/2014/08/stm32f4-external-interrupts-tutorial
-
 	GPIO_InitTypeDef GPIO_InitStruct;
-	EXTI_InitTypeDef EXTI_InitStruct;
 	NVIC_InitTypeDef NVIC_InitStruct;
 	TIM_TimeBaseInitTypeDef TIM_InitStruct;
 
-	// GPIOC clock enabled in main(), left in for parity with example code
-	//RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
-
-//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
@@ -36,28 +28,6 @@ void Buttons_Init()
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_Init(button_bank, &GPIO_InitStruct);
-
-/*
-	Buttons_LinkPinToInterrupt(EXTI_PinSource6, GBtn_Music.interruptLine);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource7, GBtn_Hour.interruptLine);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource8, GBtn_Minute.interruptLine);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource9, GBtn_Time.interruptLine);
-	Buttons_LinkPinToInterrupt(EXTI_PinSource10, GBtn_Alarm.interruptLine);
-
-	// Add IRQ vector to NVIC (C5-9)
-	NVIC_InitStruct.NVIC_IRQChannel = EXTI9_5_IRQn;
-	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init( &NVIC_InitStruct );
-
-	// Add IRQ vector to NVIC (C10)
-	NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn;
-	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x01;
-	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init( &NVIC_InitStruct );
-*/
 
 	// Long press timer, 1s
 	// numbers were tuned with a scope. General (close) form is
@@ -92,26 +62,15 @@ void Buttons_Init()
 	NVIC_Init( &NVIC_InitStruct );
 
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
-
-}
-
-void Buttons_LinkPinToInterrupt(uint8_t pinSource, uint32_t line)
-{
-	EXTI_InitTypeDef EXTI_InitStruct;
-
-	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, pinSource);
-
-	EXTI_StructInit( &EXTI_InitStruct );
-	EXTI_InitStruct.EXTI_Line = line;
-	EXTI_InitStruct.EXTI_LineCmd = ENABLE;
-	EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
-	EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-	EXTI_Init( &EXTI_InitStruct );
 }
 
 void Buttons_PollAllButtons()
 {
 	Buttons_Debounce(&GBtn_Music);
+	Buttons_Debounce(&GBtn_Hour);
+	Buttons_Debounce(&GBtn_Minute);
+	Buttons_Debounce(&GBtn_Time);
+	Buttons_Debounce(&GBtn_Alarm);
 }
 
 void Buttons_Debounce(volatile Button_T *button)
@@ -213,6 +172,7 @@ void Buttons_AssignStateFromStableInput(volatile Button_T *button)
 			&& pinState == SET)
 	{
 		/* flag the button as pressed */
+		button->isPressed = true;
 	}
 	// the button is released after a short press
 	if (button->isPressed == true
@@ -220,6 +180,8 @@ void Buttons_AssignStateFromStableInput(volatile Button_T *button)
 			&& button->isLongPress == false)
 	{
 		/* reset the press flag and do the short press function */
+		button->isPressed = false;
+		button->shortPress_func;
 	}
 	// the button is released after a long press
 	if (button->isPressed == true
@@ -227,6 +189,8 @@ void Buttons_AssignStateFromStableInput(volatile Button_T *button)
 			&& button->isLongPress == true)
 	{
 		/* reset flags but take no action */
+		button->isPressed = false;
+		button->isLongPress = false;
 	}
 }
 
@@ -252,8 +216,8 @@ void Buttons_AssignStateFromLongPress(volatile Button_T *button)
 {
 	if (button->isPressed == true)
 	{
+		/* set flag and do the long press function */
 		button->isLongPress = true;
-		/* do the long press function */
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
+		button->longPress_func;
 	}
 }

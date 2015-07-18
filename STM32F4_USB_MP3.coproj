@@ -149,6 +149,8 @@
     <File name="audio/helix/real" path="" type="2"/>
     <File name="STM32_bsp/STM32F4-Discovery/stm32f4_discovery_lis302dl.c" path="STM32F4-Discovery/stm32f4_discovery_lis302dl.c" type="1"/>
     <File name="audio/STM32_USB_DEVICE" path="" type="2"/>
+    <File name="custom/inc/state_machine.h" path="state_machine.h" type="1"/>
+    <File name="custom/src/state_machine.c" path="state_machine.c" type="1"/>
     <File name="audio/helix/pub/imdct.c" path="helix/real/imdct.c" type="1"/>
     <File name="audio/helix/pub/buffers.c" path="helix/real/buffers.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_conf.h" path="inc/usb_conf.h" type="1"/>

@@ -12,10 +12,6 @@ RTC_AlarmTypeDef	AlarmStruct;
 RTC_AlarmTypeDef 	alarmMemory;
 
 // Martial those global variables!
-extern volatile Button_T GBtn_Music;
-extern volatile Button_T GBtn_Hour;
-extern volatile Button_T GBtn_Minute;
-extern volatile Button_T GBtn_Time;
-extern volatile Button_T GBtn_Alarm;
+
 
 #endif /* MAIN_H_ */

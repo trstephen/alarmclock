@@ -7,6 +7,7 @@
 #include "clock_display.h"
 #include "main.h"
 #include "misc.h"
+#include "state_machine.h"
 #include "stm32f4xx_dac.h"
 #include "stm32f4xx_exti.h"
 #include "stm32f4xx_gpio.h"
@@ -37,6 +38,46 @@ extern volatile int snoozeMemory = 0;
 
 volatile uint16_t currentClockSegment = DIGIT_H10;
 
+// Global variables for buttons
+volatile Button_T GBtn_Music = {
+	.pin = GPIO_Pin_6,
+	.isPressed = false,
+	.isLongPress = false,
+	.shortPress_func = State_ToggleBlueLED,
+	.longPress_func = State_ToggleOrangeLED
+};
+
+volatile Button_T GBtn_Hour = {
+	.pin = GPIO_Pin_7,
+	.isPressed = false,
+	.isLongPress = false,
+	.shortPress_func = State_ButtonDisabled,
+	.longPress_func = State_ButtonDisabled
+};
+
+volatile Button_T GBtn_Minute = {
+	.pin = GPIO_Pin_8,
+	.isPressed = false,
+	.isLongPress = false,
+	.shortPress_func = State_ButtonDisabled,
+	.longPress_func = State_ButtonDisabled
+};
+
+volatile Button_T GBtn_Time = {
+	.pin = GPIO_Pin_9,
+	.isPressed = false,
+	.isLongPress = false,
+	.shortPress_func = State_ButtonDisabled,
+	.longPress_func = State_ButtonDisabled
+};
+
+volatile Button_T GBtn_Alarm = {
+	.pin = GPIO_Pin_10,
+	.isPressed = false,
+	.isLongPress = false,
+	.shortPress_func = State_ButtonDisabled,
+	.longPress_func = State_ButtonDisabled
+};
 
 int main(void)
 {
@@ -74,46 +115,6 @@ void TIM5_IRQHandler(void)
     }
 }
 
-//// 1s timer handler
-//void TIM7_IRQHandler(void)
-//{
-//	if( TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET )
-//	{
-//
-////		Buttons_AssignLongPress();
-//
-//		if(GBtn_Music.isPressed == true)
-//		{
-//			GBtn_Music.isLongPress = true;
-//		}
-//		else if(GBtn_Hour.isPressed == true)
-//		{
-//			GBtn_Hour.isLongPress = true;
-//		}
-//		else if(GBtn_Minute.isPressed == true)
-//		{
-//			GBtn_Minute.isLongPress = true;
-//		}
-//		else if(GBtn_Time.isPressed == true)
-//		{
-//			GBtn_Time.isLongPress = true;
-//		}
-//		else if(GBtn_Alarm.isPressed == true)
-//		{
-//			GBtn_Alarm.isLongPress = true;
-//		}
-//
-//		// Disable the timer and reset the count
-//		TIM_Cmd(TIM7, DISABLE);
-//		TIM_SetCounter(TIM7, 0);
-//
-//		/* Do the long press function */
-//		GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
-//
-//		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
-//	}
-//}
-
 //alarm A interrupt handler
 //when alarm occurs, clear all the interrupt bits and flags
 //then set the flag to play mp3
@@ -131,81 +132,6 @@ void RTC_Alarm_IRQHandler(void)
 	  }
 }
 
-// PinC6-9 Handler
-/*void EXTI9_5_IRQHandler(void)
-{
-	if( EXTI_GetITStatus(GBtn_Music.interruptLine) != RESET)
-	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
-
-		EXTI_ClearITPendingBit(GBtn_Music.interruptLine);
-	}
-	else if( EXTI_GetITStatus(GBtn_Hour.interruptLine) != RESET)
-	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-
-		EXTI_ClearITPendingBit(GBtn_Hour.interruptLine);
-	}
-	else if( EXTI_GetITStatus(GBtn_Minute.interruptLine) != RESET)
-	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-
-		EXTI_ClearITPendingBit(GBtn_Minute.interruptLine);
-	}
-//	else if( EXTI_GetITStatus(GBtn_Time.interruptLine) != RESET)
-//	{
-//		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-//
-//		EXTI_ClearITPendingBit(GBtn_Time.interruptLine);
-//	}
-}*/
-
-// PinC10 Handler
-/*
- void EXTI15_10_IRQHandler(void)
-{
-	if( EXTI_GetITStatus(GBtn_Alarm.interruptLine) != RESET)
-	{
-		// If an edge change is detected, it could be...
-
-		// a leading edge
-		if (GBtn_Alarm.isPressed == false)
-		{
-			GBtn_Alarm.isPressed = true;
-
-			 Start timer
-			TIM_Cmd(TIM7, ENABLE);
-		}
-		// the falling edge of a short press
-		else if (  GBtn_Alarm.isPressed == true
-				&& TIM_GetCounter(TIM7) > 150
-				&& GBtn_Alarm.isLongPress == false )
-		{
-			GBtn_Alarm.isPressed = false;
-
-			 Stop timer
-			TIM_Cmd(TIM7, DISABLE);
-			TIM_SetCounter(TIM7, 0);
-//			TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
-
-			 signal a short press
-			GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-		}
-		// the falling edge of a long press
-		else if (  GBtn_Alarm.isPressed == true
-				&& GBtn_Alarm.isLongPress == true )
-		{
-			GBtn_Alarm.isPressed = false;
-			GBtn_Alarm.isLongPress = false;
-
-			 take no action, since the long press timer handled the state change
-			GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
-		}
-
-		EXTI_ClearITPendingBit(GBtn_Alarm.interruptLine);
-	}
-}
-*/
 
 //configures the clocks, gpio, alarm, interrupts etc.
 void configuration(void)
