@@ -42,6 +42,9 @@ int main(void)
 {
   configuration();
 
+  // enable 1s timer
+//  TIM_Cmd(TIM7, ENABLE);
+
   // set audio enable pin to LOW to turn on LM386
   GPIO_ResetBits(GPIOD, GPIO_Pin_6);
 
@@ -64,10 +67,52 @@ void TIM5_IRQHandler(void)
 	{
 		ClockDisplay_TimeTest();
 
+		Buttons_PollAllButtons();
+
 		//clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
     }
 }
+
+//// 1s timer handler
+//void TIM7_IRQHandler(void)
+//{
+//	if( TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET )
+//	{
+//
+////		Buttons_AssignLongPress();
+//
+//		if(GBtn_Music.isPressed == true)
+//		{
+//			GBtn_Music.isLongPress = true;
+//		}
+//		else if(GBtn_Hour.isPressed == true)
+//		{
+//			GBtn_Hour.isLongPress = true;
+//		}
+//		else if(GBtn_Minute.isPressed == true)
+//		{
+//			GBtn_Minute.isLongPress = true;
+//		}
+//		else if(GBtn_Time.isPressed == true)
+//		{
+//			GBtn_Time.isLongPress = true;
+//		}
+//		else if(GBtn_Alarm.isPressed == true)
+//		{
+//			GBtn_Alarm.isLongPress = true;
+//		}
+//
+//		// Disable the timer and reset the count
+//		TIM_Cmd(TIM7, DISABLE);
+//		TIM_SetCounter(TIM7, 0);
+//
+//		/* Do the long press function */
+//		GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
+//
+//		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
+//	}
+//}
 
 //alarm A interrupt handler
 //when alarm occurs, clear all the interrupt bits and flags
@@ -87,7 +132,7 @@ void RTC_Alarm_IRQHandler(void)
 }
 
 // PinC6-9 Handler
-void EXTI9_5_IRQHandler(void)
+/*void EXTI9_5_IRQHandler(void)
 {
 	if( EXTI_GetITStatus(GBtn_Music.interruptLine) != RESET)
 	{
@@ -107,24 +152,60 @@ void EXTI9_5_IRQHandler(void)
 
 		EXTI_ClearITPendingBit(GBtn_Minute.interruptLine);
 	}
-	else if( EXTI_GetITStatus(GBtn_Time.interruptLine) != RESET)
-	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-
-		EXTI_ClearITPendingBit(GBtn_Time.interruptLine);
-	}
-}
+//	else if( EXTI_GetITStatus(GBtn_Time.interruptLine) != RESET)
+//	{
+//		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+//
+//		EXTI_ClearITPendingBit(GBtn_Time.interruptLine);
+//	}
+}*/
 
 // PinC10 Handler
-void EXTI15_10_IRQHandler(void)
+/*
+ void EXTI15_10_IRQHandler(void)
 {
 	if( EXTI_GetITStatus(GBtn_Alarm.interruptLine) != RESET)
 	{
-		GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+		// If an edge change is detected, it could be...
+
+		// a leading edge
+		if (GBtn_Alarm.isPressed == false)
+		{
+			GBtn_Alarm.isPressed = true;
+
+			 Start timer
+			TIM_Cmd(TIM7, ENABLE);
+		}
+		// the falling edge of a short press
+		else if (  GBtn_Alarm.isPressed == true
+				&& TIM_GetCounter(TIM7) > 150
+				&& GBtn_Alarm.isLongPress == false )
+		{
+			GBtn_Alarm.isPressed = false;
+
+			 Stop timer
+			TIM_Cmd(TIM7, DISABLE);
+			TIM_SetCounter(TIM7, 0);
+//			TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
+
+			 signal a short press
+			GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+		}
+		// the falling edge of a long press
+		else if (  GBtn_Alarm.isPressed == true
+				&& GBtn_Alarm.isLongPress == true )
+		{
+			GBtn_Alarm.isPressed = false;
+			GBtn_Alarm.isLongPress = false;
+
+			 take no action, since the long press timer handled the state change
+			GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
+		}
 
 		EXTI_ClearITPendingBit(GBtn_Alarm.interruptLine);
 	}
 }
+*/
 
 //configures the clocks, gpio, alarm, interrupts etc.
 void configuration(void)

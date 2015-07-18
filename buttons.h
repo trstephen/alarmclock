@@ -53,8 +53,6 @@ static volatile Button_T GBtn_Alarm = {
 	.isLongPress = false
 };
 
-
-
 /*
  * Buttons_Init
  *
@@ -78,5 +76,17 @@ void Buttons_Init();
  *  descr:	Configures EXTI for a given pin and line
  */
 void Buttons_LinkPinToInterrupt(uint8_t pinSource, uint32_t line);
+
+void Buttons_AssignStateFromStableInput(volatile Button_T *button);
+
+void TIM3_IRQHandler();
+
+void Buttons_PollAllButtons();
+
+void Buttons_Debounce(volatile Button_T *button);
+
+void TIM7_IRQHandler(void);
+
+void Buttons_AssignStateFromLongPress(volatile Button_T *button);
 
 #endif /* BUTTONS_H_ */

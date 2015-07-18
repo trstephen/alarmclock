@@ -3,12 +3,6 @@
 
 #include "stm32f4xx_gpio.h"
 
-/*
- * For sake of consistency, SetBits will be associated with activating a digit / segment
- * and ResetBits will turn it off. Since the display circuit is active low, unwanted (complementary)
- * digits / segments are included in the constants
- */
-
 
 static const GPIO_TypeDef* display_bank = GPIOE;
 
