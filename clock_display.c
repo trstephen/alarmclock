@@ -164,6 +164,7 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 	switch (currentClockSegment) {
 		case DIGIT_H10:
 			currentDigit = time->RTC_Minutes & 0x0F0;
+			currentDigit = currentDigit >> 4;
 			break;
 		case DIGIT_H01:
 			currentDigit = time->RTC_Minutes & 0x00F;
@@ -173,6 +174,7 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 			break;
 		case DIGIT_M10:
 			currentDigit = time->RTC_Seconds & 0x0F0;
+			currentDigit = currentDigit >> 4;
 			break;
 		case DIGIT_M01:
 			currentDigit = time->RTC_Seconds & 0x00F;
@@ -192,7 +194,7 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 	if ( (currentClockSegment == DIGIT_H10)
 		&& (currentDigit == 0x0) )
 		{
-//			displayPins = numbers[ALL]; // despite the awkward names, this illuminates no segments
+			displayPins = numbers[ALL]; // despite the awkward names, this illuminates no segments
 		}
 
 	return displayPins;

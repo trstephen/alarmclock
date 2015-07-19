@@ -16,49 +16,54 @@
 <part id="3"/>
 <part id="4"/>
 <part id="5"/>
-<part id="6"/>
 <part id="7"/>
+<part id="6"/>
+<part id="8"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/main.c" title="main.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/main.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/main.c" title="main.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/main.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2991" selectionTopPixel="1110"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2011" selectionTopPixel="930"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" partName="main.h" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/main.h" title="main.h" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/main.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/main.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="971" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="timeKeeping.c" partName="timeKeeping.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/timeKeeping.c" title="timeKeeping.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/timeKeeping.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/src/timeKeeping.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="timeKeeping.h" partName="timeKeeping.h" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/timeKeeping.h" title="timeKeeping.h" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/timeKeeping.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/inc/timeKeeping.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="287" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="clock_display.c" partName="clock_display.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/clock_display.c" title="clock_display.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/clock_display.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/src/clock_display.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="354" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5046" selectionTopPixel="2242"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="clock_display.h" partName="clock_display.h" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/clock_display.h" title="clock_display.h" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/clock_display.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/inc/clock_display.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2740" selectionTopPixel="151"/>
+<editorState selectionHorizontalPixel="0" selectionLength="27" selectionOffset="54" selectionTopPixel="637"/>
 </editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="buttons.c" partName="buttons.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/buttons.c" title="buttons.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/buttons.c" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="buttons.c" partName="buttons.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/buttons.c" title="buttons.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/buttons.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/src/buttons.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1523" selectionTopPixel="82"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="4713" selectionTopPixel="1927"/>
 </editor>
 <editor id="org.eclipse.cdt.ui.editor.CEditor" name="buttons.h" partName="buttons.h" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/buttons.h" title="buttons.h" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/buttons.h" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/inc/buttons.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="815" selectionTopPixel="180"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1479" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="state_machine.h" partName="state_machine.h" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/state_machine.h" title="state_machine.h" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/state_machine.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/inc/state_machine.h"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="87" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="state_machine.c" partName="state_machine.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/state_machine.c" title="state_machine.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/state_machine.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/custom/src/state_machine.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="203" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" partName="startup_stm32f4xx.c" path="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/cmsis_boot/startup_stm32f4xx.c" title="startup_stm32f4xx.c" tooltip="C:/Users/tyler/Documents/GitHub/ceng299/alarmclock/cmsis_boot/startup_stm32f4xx.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32F4_USB_MP3/core/cmsis_boot/startup_stm32f4xx.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="14754" selectionTopPixel="3765"/>
 </editor>
 </editors>
 <views>
 <view id="org.eclipse.debug.ui.ExpressionView" partName="Expressions">
 <viewState>
-<ExpressionKeySet ExpKeys="currentClockSegment,"/>
+<ExpressionKeySet ExpKeys="GBtn_Alarm,"/>
 </viewState>
 </view>
 <view id="org.eclipse.ui.views.ProgressView" partName="Progress">
@@ -76,14 +81,16 @@
 <element path="/STM32F4_USB_MP3/custom/inc"/>
 <element path="/STM32F4_USB_MP3/custom/src"/>
 <element path="/STM32F4_USB_MP3/STM32_bsp"/>
+<element path="/STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER"/>
 </expanded>
 <selection>
-<element path="/STM32F4_USB_MP3/audio/Audio.c"/>
+<element path="/STM32F4_USB_MP3/custom/src/timeKeeping.c"/>
 </selection>
 </viewState>
 </view>
 <view id="org.eclipse.search.ui.views.SearchView" partName="Search">
 <viewState isPinned="false">
+<view IMemento.internal.id="org.eclipse.cdt.ui.pdomSearchViewPage" definitionColumnWidth="150" locationColumnWidth="300" matchColumnWidth="300" org.eclipse.search.lastActivation="2" org.eclipse.search.resultpage.layout="2" showEnclosingDefinitions="true"/>
 <view IMemento.internal.id="org.eclipse.search.text.FileSearchResultPage" org.eclipse.search.lastActivation="1" org.eclipse.search.resultpage.layout="2" org.eclipse.search.resultpage.limit="1000" org.eclipse.search.resultpage.sorting="2"/>
 <view IMemento.internal.id="" org.eclipse.search.lastActivation="0"/>
 </viewState>
@@ -134,8 +141,8 @@
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showPeripheralsAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
 <hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
+<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
 <hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
@@ -149,9 +156,9 @@
 </fastViewBar>
 <fastViewBar fastViewLocation="1024" id="org.eclipse.ui.internal.ViewStack@1e89a7a" orientation="256" selectedTabId="org.eclipse.ui.console.ConsoleView" style="0">
 <fastViews>
-<view id="org.coocox.component.ui.ComponentView" ratio="0.29943502"/>
+<view id="org.coocox.component.ui.ComponentView" ratio="0.2987013"/>
 <view id="org.eclipse.ui.console.ConsoleView" ratio="0.30411255"/>
-<view id="org.eclipse.search.ui.views.SearchView" ratio="0.3"/>
+<view id="org.eclipse.search.ui.views.SearchView" ratio="0.29978356"/>
 </fastViews>
 </fastViewBar>
 <fastViewBar fastViewLocation="131072" id="org.eclipse.ui.internal.ViewStack@1cc90b1" orientation="512" selectedTabId="org.eclipse.ui.views.ProgressView" style="0">
@@ -236,8 +243,8 @@
 <hide_menu_item_id id="org.coocox.builder.rcp.flashMenu"/>
 <hide_menu_item_id id="org.coocox.builder.ui.debug"/>
 <hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction"/>
-<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.showHelpViewAction1"/>
+<hide_menu_item_id id="org.coocox.builder.ui.newFile"/>
 <hide_menu_item_id id="org.coocox.builder.ui.actions.ConfigurationAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.builderDefaultLayout"/>
 <hide_menu_item_id id="org.eclipse.jdt.ui.source.menu"/>
@@ -258,8 +265,8 @@
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 <hide_toolbar_item_id id="org.coocox.builder.ui.build"/>
 <hide_toolbar_item_id id="org.coocox.welcome.ui.action.welcome"/>
-<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <hide_toolbar_item_id id="org.coocox.codebugger.configuration.coideProgramDownloadAction"/>
+<hide_toolbar_item_id id="org.coocox.component.ui.ShowRepositoryAction"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <view id="org.coocox.codebugger.trace.ui.traceview"/>
@@ -269,40 +276,56 @@
 <view id="org.eclipse.cdt.dsf.debug.ui.disassembly.view"/>
 <fastViewBars/>
 <viewLayoutRec closeable="false" id="org.eclipse.debug.ui.DebugView"/>
-<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="org.eclipse.ui.internal.ViewStack@97b352">&#x0A;<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">&#x0A;<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<layout>
+<mainWindow>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@97b352">
+<folder activePageID="org.coocox.builder.ui.views.ProjectView" appearance="2" expanded="2">
+<page content="org.coocox.builder.ui.views.ProjectView" label="Project"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1194" ratioRight="398" relationship="2" relative="org.eclipse.ui.internal.ViewStack@97b352">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1194" ratioRight="398" relationship="2" relative="org.eclipse.ui.internal.ViewStack@97b352">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@147a4d4" ratio="0.69947505" ratioLeft="533" ratioRight="229" relationship="4" relative="org.eclipse.ui.internal.ViewStack@97b352">&#x0A;<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@147a4d4" ratio="0.7513572" ratioLeft="692" ratioRight="229" relationship="4" relative="org.eclipse.ui.internal.ViewStack@97b352">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 <part id="1"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@969258" ratio="0.5" ratioLeft="796" ratioRight="796" relationship="2" relative="org.eclipse.ui.internal.ViewStack@147a4d4">&#x0A;<folder activePageID="org.eclipse.debug.ui.ExpressionView" appearance="2" expanded="2">&#x0A;<page content="org.coocox.codebugger.trace.ui.traceview" label="Semihosting"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@969258" ratio="0.5" ratioLeft="796" ratioRight="796" relationship="2" relative="org.eclipse.ui.internal.ViewStack@147a4d4">
+<folder activePageID="org.eclipse.debug.ui.VariableView" appearance="2" expanded="2">
+<page content="org.coocox.codebugger.trace.ui.traceview" label="Semihosting"/>
 <page content="org.eclipse.debug.ui.ExpressionView" label="Expressions"/>
 <page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
 <page content="org.eclipse.search.ui.views.SearchView" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.MemoryView" label="LabelNotFound"/>
 <page content="org.eclipse.cdt.debug.ui.memory.memorybrowser.MemoryBrowser" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 <part id="1"/>
 <part id="2"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1620e48" ratio="0.74783295" ratioLeft="949" ratioRight="320" relationship="2" relative="org.eclipse.ui.internal.ViewStack@97b352">&#x0A;<folder activePageID="org.eclipse.cdt.dsf.debug.ui.disassembly.view" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.cdt.dsf.debug.ui.disassembly.view" label="Disassembly"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1620e48" ratio="0.74783295" ratioLeft="949" ratioRight="320" relationship="2" relative="org.eclipse.ui.internal.ViewStack@97b352">
+<folder activePageID="org.eclipse.cdt.dsf.debug.ui.disassembly.view" appearance="2" expanded="2">
+<page content="org.eclipse.cdt.dsf.debug.ui.disassembly.view" label="Disassembly"/>
 <page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
 <page content="org.coocox.coassistant.view.CoAssistantView_debug" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 </presentation>
 </folder>
 </info>
@@ -315,162 +338,164 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/src/buttons.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/inc/buttons.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/main.h"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/inc/clock_display.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/src/buttons.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/inc/state_machine.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/src/clock_display.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/inc/timeKeeping.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/inc/clock_display.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/main.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/core/cmsis_boot/startup_stm32f4xx.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32F4_USB_MP3/custom/src/state_machine.c"/>
 </editors>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4461" y="0"/>
+<item historyLabel="main.h" index="6">
+<position info="not_deleted" x="287" y="0"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="500" y="0"/>
+<item historyLabel="clock_display.c" index="4">
+<position info="not_deleted" x="5046" y="0"/>
 </item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1232" y="0"/>
+<item historyLabel="clock_display.h" index="5">
+<position info="not_deleted" x="54" y="27"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="1394" y="0"/>
+<item historyLabel="clock_display.c" index="4">
+<position info="not_deleted" x="5046" y="0"/>
 </item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1232" y="0"/>
+<item historyLabel="main.h" index="6">
+<position info="not_deleted" x="287" y="0"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="689" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="4827" y="0"/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4461" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="6058" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="625" y="36"/>
-</item>
-<item historyLabel="clock_display.h" index="4">
-<position info="not_deleted" x="2765" y="0"/>
-</item>
-<item historyLabel="clock_display.c" index="5">
-<position info="not_deleted" x="354" y="0"/>
-</item>
-<item historyLabel="clock_display.h" index="4">
-<position info="not_deleted" x="2740" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1232" y="0"/>
-</item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="1392" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="338" y="27"/>
-</item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="69" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1258" y="0"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4461" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1258" y="0"/>
-</item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="69" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="851" y="0"/>
-</item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="1392" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="851" y="0"/>
-</item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="1390" y="0"/>
-</item>
-<item historyLabel="timeKeeping.h" index="6">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="625" y="36"/>
-</item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4461" y="0"/>
-</item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="1363" y="0"/>
-</item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1523" y="0"/>
-</item>
-<item historyLabel="main.h" index="3">
+<item historyLabel="buttons.c" index="2">
 <position/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4461" y="0"/>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="840" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
+<item historyLabel="buttons.c" index="2">
 <position/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="4461" y="0"/>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="628" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="997" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="5951" y="0"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="1363" y="0"/>
-</item>
-<item historyLabel="main.h" index="3">
+<item historyLabel="startup_stm32f4xx.c" index="7">
 <position/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="2659" y="0"/>
+<item historyLabel="state_machine.h" index="3">
+<position info="not_deleted" x="87" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="724" y="0"/>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="628" y="0"/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="2659" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="5951" y="0"/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="217" y="0"/>
+<item historyLabel="clock_display.h" index="5">
+<position info="not_deleted" x="54" y="27"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="815" y="0"/>
+<item historyLabel="state_machine.h" index="3">
+<position info="not_deleted" x="87" y="0"/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="217" y="0"/>
+<item historyLabel="startup_stm32f4xx.c" index="7">
+<position/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="799" y="0"/>
+<item historyLabel="state_machine.h" index="3">
+<position info="not_deleted" x="87" y="0"/>
 </item>
-<item historyLabel="buttons.c" index="1">
+<item historyLabel="state_machine.c" index="8">
+<position info="not_deleted" x="203" y="0"/>
+</item>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="628" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="5970" y="0"/>
+</item>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="628" y="0"/>
+</item>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="1525" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="5970" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="6134" y="0"/>
+</item>
+<item historyLabel="startup_stm32f4xx.c" index="7">
+<position info="not_deleted" x="14754" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position/>
+</item>
+<item historyLabel="buttons.h" index="1">
 <position info="not_deleted" x="1523" y="0"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="815" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="5599" y="0"/>
+</item>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="1479" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="5599" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="6545" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="6058" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="4636" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="3790" y="0"/>
 </item>
 <item historyLabel="main.c" index="0">
-<position info="not_deleted" x="217" y="0"/>
+<position info="not_deleted" x="2011" y="0"/>
 </item>
-<item historyLabel="main.h" index="3">
-<position info="not_deleted" x="971" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="3790" y="0"/>
 </item>
-<item historyLabel="main.c" index="0">
-<position info="not_deleted" x="2991" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="1727" y="0"/>
 </item>
-<item historyLabel="buttons.c" index="1">
-<position info="not_deleted" x="1523" y="0"/>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="3973" y="0"/>
 </item>
-<item historyLabel="buttons.h" index="2">
-<position info="not_deleted" x="815" y="0"/>
+<item historyLabel="startup_stm32f4xx.c" index="7">
+<position info="not_deleted" x="14754" y="0"/>
 </item>
-<item active="true" historyLabel="main.c" index="0">
-<position info="not_deleted" x="2991" y="0"/>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="1479" y="0"/>
+</item>
+<item historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="3973" y="0"/>
+</item>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="1479" y="0"/>
+</item>
+<item historyLabel="startup_stm32f4xx.c" index="7">
+<position info="not_deleted" x="14754" y="0"/>
+</item>
+<item historyLabel="state_machine.c" index="8">
+<position info="not_deleted" x="203" y="0"/>
+</item>
+<item historyLabel="buttons.h" index="1">
+<position info="not_deleted" x="1479" y="0"/>
+</item>
+<item active="true" historyLabel="buttons.c" index="2">
+<position info="not_deleted" x="3973" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -479,8 +504,32 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="STM32F4_USB_MP3/core/cmsis_boot/startup_stm32f4xx.c">
+<persistable path="/STM32F4_USB_MP3/core/cmsis_boot/startup_stm32f4xx.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timeKeeping.c" tooltip="STM32F4_USB_MP3/custom/src/timeKeeping.c">
+<persistable path="/STM32F4_USB_MP3/custom/src/timeKeeping.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="state_machine.c" tooltip="STM32F4_USB_MP3/custom/src/state_machine.c">
+<persistable path="/STM32F4_USB_MP3/custom/src/state_machine.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="state_machine.h" tooltip="STM32F4_USB_MP3/custom/inc/state_machine.h">
+<persistable path="/STM32F4_USB_MP3/custom/inc/state_machine.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="audioMP3.h" tooltip="STM32F4_USB_MP3/audio/audioMP3.h">
+<persistable path="/STM32F4_USB_MP3/audio/audioMP3.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_tim.c" tooltip="STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_tim.c">
+<persistable path="/STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_tim.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_it.c" tooltip="STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_it.c">
+<persistable path="/STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_it.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Audio.c" tooltip="STM32F4_USB_MP3/audio/Audio.c">
 <persistable path="/STM32F4_USB_MP3/audio/Audio.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="audioMP3.c" tooltip="STM32F4_USB_MP3/audio/audioMP3.c">
+<persistable path="/STM32F4_USB_MP3/audio/audioMP3.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Audio.h" tooltip="STM32F4_USB_MP3/audio/Audio.h">
 <persistable path="/STM32F4_USB_MP3/audio/Audio.h"/>
@@ -497,32 +546,8 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="clock_display.c" tooltip="STM32F4_USB_MP3/custom/src/clock_display.c">
 <persistable path="/STM32F4_USB_MP3/custom/src/clock_display.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="startup_stm32f4xx.c" tooltip="STM32F4_USB_MP3/core/cmsis_boot/startup_stm32f4xx.c">
-<persistable path="/STM32F4_USB_MP3/core/cmsis_boot/startup_stm32f4xx.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="audioMP3.c" tooltip="STM32F4_USB_MP3/audio/audioMP3.c">
-<persistable path="/STM32F4_USB_MP3/audio/audioMP3.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="audioMP3.h" tooltip="STM32F4_USB_MP3/audio/audioMP3.h">
-<persistable path="/STM32F4_USB_MP3/audio/audioMP3.h"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_rtc.c" tooltip="STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_rtc.c">
 <persistable path="/STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_rtc.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timeKeeping.h" tooltip="STM32F4_USB_MP3/custom/inc/timeKeeping.h">
-<persistable path="/STM32F4_USB_MP3/custom/inc/timeKeeping.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="timeKeeping.c" tooltip="STM32F4_USB_MP3/custom/src/timeKeeping.c">
-<persistable path="/STM32F4_USB_MP3/custom/src/timeKeeping.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" tooltip="STM32F4_USB_MP3/main.h">
-<persistable path="/STM32F4_USB_MP3/main.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx_gpio.c" tooltip="STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_gpio.c">
-<persistable path="/STM32F4_USB_MP3/STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_gpio.c"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f4xx.h" tooltip="C:\Users\tyler\Documents\GitHub\ceng299\alarmclock\cmsis\inc\stm32f4xx.h">
-<persistable path="C:\Users\tyler\Documents\GitHub\ceng299\alarmclock\cmsis\inc\stm32f4xx.h" project="STM32F4_USB_MP3"/>
 </file>
 </mruList>
 </workbench>

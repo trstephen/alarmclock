@@ -48,4 +48,6 @@ void TIM7_IRQHandler(void);
 
 void Buttons_AssignStateFromLongPress(volatile Button_T *button);
 
+void Buttons_SetTimerActivity(TIM_TypeDef *TIMx, FunctionalState newState);
+
 #endif /* BUTTONS_H_ */

@@ -81,19 +81,16 @@ volatile Button_T GBtn_Alarm = {
 
 int main(void)
 {
-  configuration();
+	configuration();
 
-  // enable 1s timer
-//  TIM_Cmd(TIM7, ENABLE);
+	// set audio enable pin to LOW to turn on LM386
+	GPIO_ResetBits(GPIOD, GPIO_Pin_6);
 
-  // set audio enable pin to LOW to turn on LM386
-  GPIO_ResetBits(GPIOD, GPIO_Pin_6);
-
-  while ( 1 )
-  {
+	while ( 1 )
+	{
 		mp3PlayingFlag = 1;
 		audioToMp3();
-  }
+	}
 }
 
 //timer interrupt handler that is called at a rate of 500Hz

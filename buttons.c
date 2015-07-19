@@ -42,11 +42,8 @@ void Buttons_Init()
 	NVIC_InitStruct.NVIC_IRQChannel = TIM7_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStruct.NVIC_IRQChannelCmd = DISABLE;
 	NVIC_Init( &NVIC_InitStruct );
-
-	// enable timer interrupt
-	TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE);
 
 	// Debouncing timer, 10ms
 	TIM_TimeBaseStructInit(&TIM_InitStruct);
@@ -58,10 +55,9 @@ void Buttons_Init()
 	NVIC_InitStruct.NVIC_IRQChannel = TIM3_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStruct.NVIC_IRQChannelCmd = DISABLE;
 	NVIC_Init( &NVIC_InitStruct );
 
-	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
 }
 
 void Buttons_PollAllButtons()
@@ -87,16 +83,16 @@ void Buttons_Debounce(volatile Button_T *button)
 		/* do nothing */
 	}
 	// rising edge
-	if (button->isPressed == false
+	else if (button->isPressed == false
 		&& pinState == SET
 		&& debounceTimerState == DISABLE)
 	{
 		/* enable DB and LP timers */
-		TIM_Cmd(TIM3, ENABLE);
-		TIM_Cmd(TIM7, ENABLE);
+		Buttons_SetTimerActivity(TIM3, ENABLE);
+		Buttons_SetTimerActivity(TIM7, ENABLE);
 	}
 	// ripple on rising edge
-	if (button->isPressed == false
+	else if (button->isPressed == false
 		&& pinState == RESET
 		&& debounceTimerState == ENABLE)
 	{
@@ -105,29 +101,29 @@ void Buttons_Debounce(volatile Button_T *button)
 		TIM_SetCounter(TIM7, 0);
 	}
 	// waiting for rise debounce to activate
-	if (button->isPressed == false
+	else if (button->isPressed == false
 		&& pinState == SET
 		&& debounceTimerState == ENABLE)
 	{
 		/* do nothing */
 	}
 	// steady up
-	if (button->isPressed == true
+	else if (button->isPressed == true
 		&& pinState == SET
 		&& debounceTimerState == DISABLE)
 	{
 		/* do nothing */
 	}
 	// falling edge
-	if (button->isPressed == true
+	else if (button->isPressed == true
 		&& pinState == RESET
 		&& debounceTimerState == DISABLE)
 	{
 		/* enable DB timer */
-		TIM_Cmd(TIM3, ENABLE);
+		Buttons_SetTimerActivity(TIM3, ENABLE);
 	}
 	// ripple on falling edge
-	if (button->isPressed == true
+	else if (button->isPressed == true
 		&& pinState == SET
 		&& debounceTimerState == ENABLE)
 	{
@@ -135,7 +131,7 @@ void Buttons_Debounce(volatile Button_T *button)
 		TIM_SetCounter(TIM3, 0);
 	}
 	// waiting for fall debounce to activate
-	if (button->isPressed == true
+	else if (button->isPressed == true
 		&& pinState == RESET
 		&& debounceTimerState == ENABLE)
 	{
@@ -148,16 +144,16 @@ void TIM3_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET )
 	{
-		// Poll all the buttons to determine who caused the interrupt
+//		// Poll all the buttons to determine who caused the interrupt
 		Buttons_AssignStateFromStableInput(&GBtn_Music);
 		Buttons_AssignStateFromStableInput(&GBtn_Hour);
 		Buttons_AssignStateFromStableInput(&GBtn_Minute);
 		Buttons_AssignStateFromStableInput(&GBtn_Time);
 		Buttons_AssignStateFromStableInput(&GBtn_Alarm);
 
-		// Disable the timer and reset the count
-		TIM_Cmd(TIM3, DISABLE);
-		TIM_SetCounter(TIM3, 0);
+		Buttons_SetTimerActivity(TIM3, DISABLE);
+
+		State_ToggleBlueLED();
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 	}
 }
@@ -206,9 +202,11 @@ void TIM7_IRQHandler(void)
 		Buttons_AssignStateFromLongPress(&GBtn_Alarm);
 
 		// Disable the timer and reset the count
-		TIM_Cmd(TIM7, DISABLE);
-		TIM_SetCounter(TIM7, 0);
+		Buttons_SetTimerActivity(TIM7, DISABLE);
+
+		State_ToggleRedLED();
 		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
+
 	}
 }
 
@@ -220,4 +218,11 @@ void Buttons_AssignStateFromLongPress(volatile Button_T *button)
 		button->isLongPress = true;
 		button->longPress_func;
 	}
+}
+
+void Buttons_SetTimerActivity(TIM_TypeDef *TIMx, FunctionalState newState)
+{
+	TIM_ITConfig(TIMx, TIM_IT_Update, newState);
+	TIM_Cmd(TIMx, newState);
+	TIM_SetCounter(TIMx, 0);
 }
