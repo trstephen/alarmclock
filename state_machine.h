@@ -7,5 +7,6 @@ void State_ButtonDisabled();
 void State_ToggleRedLED();
 void State_ToggleBlueLED();
 void State_ToggleOrangeLED();
+void State_ToggleGreenLED();
 
 #endif /* STATE_MACHINE_H_ */

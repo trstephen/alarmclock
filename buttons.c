@@ -42,7 +42,7 @@ void Buttons_Init()
 	NVIC_InitStruct.NVIC_IRQChannel = TIM7_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelCmd = DISABLE;
+	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init( &NVIC_InitStruct );
 
 	// Debouncing timer, 10ms
@@ -55,46 +55,62 @@ void Buttons_Init()
 	NVIC_InitStruct.NVIC_IRQChannel = TIM3_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x00;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x00;
-	NVIC_InitStruct.NVIC_IRQChannelCmd = DISABLE;
+	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init( &NVIC_InitStruct );
+
+//	Buttons_SetTimerState(TIM7, ENABLE);
+//	Buttons_SetTimerState(TIM3, ENABLE);
+
+	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+	TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE);
 
 }
 
 void Buttons_PollAllButtons()
 {
-	Buttons_Debounce(&GBtn_Music);
-	Buttons_Debounce(&GBtn_Hour);
-	Buttons_Debounce(&GBtn_Minute);
-	Buttons_Debounce(&GBtn_Time);
-	Buttons_Debounce(&GBtn_Alarm);
+	int i;
+	for (i = 0; i < NUM_BUTTONS; ++i)
+	{
+		Buttons_Debounce(buttons[i]);
+	}
 }
 
 void Buttons_Debounce(volatile Button_T *button)
 {
 	uint8_t pinState = GPIO_ReadInputDataBit(button_bank, button->pin);
-	uint8_t debounceTimerState = TIM3->CR1; // control register: ENABLE or DISABLE
+	FunctionalState debounceTimerState = Buttons_GetTimerState(TIM3);
 
 	// a button may be...
 	// steady down
 	if (button->isPressed == false
-		&& pinState == RESET
+		&& pinState == Bit_RESET
 		&& debounceTimerState == DISABLE)
 	{
 		/* do nothing */
 	}
 	// rising edge
 	else if (button->isPressed == false
-		&& pinState == SET
+		&& pinState == Bit_SET
 		&& debounceTimerState == DISABLE)
 	{
-		/* enable DB and LP timers */
-		Buttons_SetTimerActivity(TIM3, ENABLE);
-		Buttons_SetTimerActivity(TIM7, ENABLE);
+		/* enable DB and LP timers and set button's debounce flag to true*/
+		Buttons_SetTimerState(TIM3, ENABLE);
+		Buttons_SetTimerState(TIM7, ENABLE);
+		button->isBeingDebounced = true;
+	}
+	// down, but the timer is debouncing another button
+	else if (button->isPressed == false
+		&& pinState == Bit_RESET
+		&& debounceTimerState == ENABLE
+		&& button->isBeingDebounced == false)
+	{
+		/* Do nothing */
 	}
 	// ripple on rising edge
 	else if (button->isPressed == false
-		&& pinState == RESET
-		&& debounceTimerState == ENABLE)
+		&& pinState == Bit_RESET
+		&& debounceTimerState == ENABLE
+		&& button->isBeingDebounced == true)
 	{
 		/* reset DB and LP timers */
 		TIM_SetCounter(TIM3, 0);
@@ -102,37 +118,47 @@ void Buttons_Debounce(volatile Button_T *button)
 	}
 	// waiting for rise debounce to activate
 	else if (button->isPressed == false
-		&& pinState == SET
+		&& pinState == Bit_SET
 		&& debounceTimerState == ENABLE)
 	{
 		/* do nothing */
 	}
 	// steady up
 	else if (button->isPressed == true
-		&& pinState == SET
+		&& pinState == Bit_SET
 		&& debounceTimerState == DISABLE)
 	{
 		/* do nothing */
 	}
 	// falling edge
 	else if (button->isPressed == true
-		&& pinState == RESET
+		&& pinState == Bit_RESET
 		&& debounceTimerState == DISABLE)
 	{
 		/* enable DB timer */
-		Buttons_SetTimerActivity(TIM3, ENABLE);
+		Buttons_SetTimerState(TIM3, ENABLE);
+		button->isBeingDebounced = true;
+	}
+	// up, but the timer is debouncing another button
+	else if (button->isPressed == true
+		&& pinState == Bit_SET
+		&& debounceTimerState == ENABLE
+		&& button->isBeingDebounced == false)
+	{
+		/* Do nothing */
 	}
 	// ripple on falling edge
 	else if (button->isPressed == true
-		&& pinState == SET
-		&& debounceTimerState == ENABLE)
+		&& pinState == Bit_SET
+		&& debounceTimerState == ENABLE
+		&& button->isBeingDebounced == true)
 	{
 		/* reset DB timer */
 		TIM_SetCounter(TIM3, 0);
 	}
 	// waiting for fall debounce to activate
 	else if (button->isPressed == true
-		&& pinState == RESET
+		&& pinState == Bit_RESET
 		&& debounceTimerState == ENABLE)
 	{
 		/* do nothing */
@@ -144,49 +170,56 @@ void TIM3_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET )
 	{
-//		// Poll all the buttons to determine who caused the interrupt
-		Buttons_AssignStateFromStableInput(&GBtn_Music);
-		Buttons_AssignStateFromStableInput(&GBtn_Hour);
-		Buttons_AssignStateFromStableInput(&GBtn_Minute);
-		Buttons_AssignStateFromStableInput(&GBtn_Time);
-		Buttons_AssignStateFromStableInput(&GBtn_Alarm);
+#if 1
+		int i;
+		for (i = 0; i < NUM_BUTTONS; i++)
+		{
+			Buttons_AssignStateFromStableInput(buttons[i]);
+		}
 
-		Buttons_SetTimerActivity(TIM3, DISABLE);
-
+		Buttons_SetTimerState(TIM3, DISABLE);
+#else
 		State_ToggleBlueLED();
+		GBtn_Alarm.shortPress_func();
+#endif
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 	}
 }
 
 void Buttons_AssignStateFromStableInput(volatile Button_T *button)
 {
-	uint8_t pinState = GPIO_ReadInputDataBit(button_bank, button->pin);
+	if (button->isBeingDebounced == true)
+	{
+		uint8_t pinState = GPIO_ReadInputDataBit(button_bank, button->pin);
 
-	// the timer tiggered because...
-	// the button is steady after being pressed
-	if (button->isPressed == false
-			&& pinState == SET)
-	{
-		/* flag the button as pressed */
-		button->isPressed = true;
-	}
-	// the button is released after a short press
-	if (button->isPressed == true
-			&& pinState == RESET
-			&& button->isLongPress == false)
-	{
-		/* reset the press flag and do the short press function */
-		button->isPressed = false;
-		button->shortPress_func;
-	}
-	// the button is released after a long press
-	if (button->isPressed == true
-			&& pinState == RESET
-			&& button->isLongPress == true)
-	{
-		/* reset flags but take no action */
-		button->isPressed = false;
-		button->isLongPress = false;
+		// the timer tiggered because...
+		// the button is steady after being pressed
+		if (button->isPressed == false
+				&& pinState == Bit_SET)
+		{
+			/* flag the button as pressed */
+			button->isPressed = true;
+		}
+		// the button is released after a short press
+		else if (button->isPressed == true
+				&& pinState == Bit_RESET
+				&& button->isLongPress == false)
+		{
+			/* reset the press flag and do the short press function */
+			button->isPressed = false;
+			button->shortPress_func();
+		}
+		// the button is released after a long press
+		else if (button->isPressed == true
+				&& pinState == Bit_RESET
+				&& button->isLongPress == true)
+		{
+			/* reset flags but take no action */
+			button->isPressed = false;
+			button->isLongPress = false;
+		}
+
+		button->isBeingDebounced = false;
 	}
 }
 
@@ -195,16 +228,21 @@ void TIM7_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET )
 	{
-		Buttons_AssignStateFromLongPress(&GBtn_Music);
-		Buttons_AssignStateFromLongPress(&GBtn_Hour);
-		Buttons_AssignStateFromLongPress(&GBtn_Minute);
-		Buttons_AssignStateFromLongPress(&GBtn_Time);
-		Buttons_AssignStateFromLongPress(&GBtn_Alarm);
+#if 1
+		int i;
+		for (i = 0; i < NUM_BUTTONS; i++)
+		{
+			Buttons_AssignStateFromLongPress(buttons[i]);
+		}
 
 		// Disable the timer and reset the count
-		Buttons_SetTimerActivity(TIM7, DISABLE);
+		Buttons_SetTimerState(TIM7, DISABLE);
 
-		State_ToggleRedLED();
+#else
+		fastTimerToggle = fastTimerToggle == DISABLE ? ENABLE : DISABLE;
+		Buttons_SetTimerState(TIM3, fastTimerToggle);
+		GBtn_Alarm.longPress_func();
+#endif
 		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
 
 	}
@@ -216,13 +254,26 @@ void Buttons_AssignStateFromLongPress(volatile Button_T *button)
 	{
 		/* set flag and do the long press function */
 		button->isLongPress = true;
-		button->longPress_func;
+		button->longPress_func();
 	}
 }
 
-void Buttons_SetTimerActivity(TIM_TypeDef *TIMx, FunctionalState newState)
+void Buttons_SetTimerState(TIM_TypeDef *TIMx, FunctionalState newState)
 {
-	TIM_ITConfig(TIMx, TIM_IT_Update, newState);
+//	TIM_ITConfig(TIMx, TIM_IT_Update, newState);
 	TIM_Cmd(TIMx, newState);
 	TIM_SetCounter(TIMx, 0);
+}
+
+
+FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx)
+{
+	FunctionalState returnState = DISABLE;
+
+	if ((TIMx->CR1 & TIM_CR1_CEN) == TIM_CR1_CEN)
+	{
+		returnState = ENABLE;
+	}
+
+	return returnState;
 }

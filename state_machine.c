@@ -28,3 +28,8 @@ void State_ToggleOrangeLED()
 {
 	GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
 }
+
+void State_ToggleGreenLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_12);
+}

@@ -3,14 +3,13 @@
 
 #include "state_machine.h"
 #include "stm32f4xx_gpio.h"
+#include "stm32f4xx_tim.h"
 #include <stdbool.h>
-
-// Constants
-static const GPIO_TypeDef* button_bank = GPIOC;
 
 // Types
 typedef struct Button{
 	uint16_t pin;					// the GPIO pin assigned to the button
+	bool isBeingDebounced;			// true if button has triggered debounce conditions
 	bool isPressed; 				// true if button is currently pressed
 	bool isLongPress;				// true if button has received a long press
 	StateFunc_T shortPress_func;	// function pointer to the short press behavior
@@ -23,6 +22,20 @@ extern volatile Button_T GBtn_Hour;
 extern volatile Button_T GBtn_Minute;
 extern volatile Button_T GBtn_Time;
 extern volatile Button_T GBtn_Alarm;
+#define NUM_BUTTONS (5)
+
+// Constants
+static const GPIO_TypeDef* button_bank = GPIOC;
+static const Button_T* buttons[NUM_BUTTONS] = {
+		&GBtn_Music,
+		&GBtn_Hour,
+		&GBtn_Minute,
+		&GBtn_Time,
+		&GBtn_Alarm
+};
+
+
+static FunctionalState fastTimerToggle = DISABLE;
 
 /*
  * Buttons_Init
@@ -48,6 +61,8 @@ void TIM7_IRQHandler(void);
 
 void Buttons_AssignStateFromLongPress(volatile Button_T *button);
 
-void Buttons_SetTimerActivity(TIM_TypeDef *TIMx, FunctionalState newState);
+void Buttons_SetTimerState(TIM_TypeDef *TIMx, FunctionalState newState);
+
+FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx);
 
 #endif /* BUTTONS_H_ */

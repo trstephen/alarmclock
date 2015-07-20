@@ -41,14 +41,16 @@ volatile uint16_t currentClockSegment = DIGIT_H10;
 // Global variables for buttons
 volatile Button_T GBtn_Music = {
 	.pin = GPIO_Pin_6,
+	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ToggleBlueLED,
-	.longPress_func = State_ToggleOrangeLED
+	.shortPress_func = State_ButtonDisabled,
+	.longPress_func = State_ButtonDisabled
 };
 
 volatile Button_T GBtn_Hour = {
 	.pin = GPIO_Pin_7,
+	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
 	.shortPress_func = State_ButtonDisabled,
@@ -57,14 +59,16 @@ volatile Button_T GBtn_Hour = {
 
 volatile Button_T GBtn_Minute = {
 	.pin = GPIO_Pin_8,
+	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = State_ToggleRedLED,
+	.longPress_func = State_ToggleGreenLED
 };
 
 volatile Button_T GBtn_Time = {
 	.pin = GPIO_Pin_9,
+	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
 	.shortPress_func = State_ButtonDisabled,
@@ -73,10 +77,11 @@ volatile Button_T GBtn_Time = {
 
 volatile Button_T GBtn_Alarm = {
 	.pin = GPIO_Pin_10,
+	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = State_ToggleBlueLED,
+	.longPress_func = State_ToggleOrangeLED
 };
 
 int main(void)
@@ -85,6 +90,8 @@ int main(void)
 
 	// set audio enable pin to LOW to turn on LM386
 	GPIO_ResetBits(GPIOD, GPIO_Pin_6);
+
+
 
 	while ( 1 )
 	{
@@ -99,6 +106,9 @@ int main(void)
 void TIM5_IRQHandler(void)
 {
 	int previousState = 0;
+
+//	TIM_Cmd(TIM7, ENABLE);
+
 
 	//double checks that interrupt has occurred
 	if( TIM_GetITStatus( TIM5, TIM_IT_Update ) != RESET )
