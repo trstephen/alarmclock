@@ -6,10 +6,13 @@
  *
  ******************************************************************/
 #include "buttons.h"
+#include "clock_display.h"
 #include "state_machine.h"
 #include "stm32f4xx_gpio.h"
+#include "stm32f4xx_rtc.h"
 
 extern volatile Button_T GBtn_Alarm;
+extern volatile ClockDisplay_T GClockDisplay;
 
 void State_ButtonDisabled()
 {
@@ -54,5 +57,17 @@ void State_SwapFunctions()
 	else
 	{
 		GBtn_Alarm.longPress_func = State_ToggleOrangeLED;
+	}
+}
+
+void State_ToggleHourFormat()
+{
+	if (GClockDisplay.hourFormat == RTC_HourFormat_12)
+	{
+		GClockDisplay.hourFormat = RTC_HourFormat_24;
+	}
+	else
+	{
+		GClockDisplay.hourFormat = RTC_HourFormat_12;
 	}
 }

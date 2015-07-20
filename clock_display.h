@@ -11,18 +11,21 @@ typedef struct ClockDisplay{
 	TimeUpdateFunc_T getTime_func;
 	uint32_t hourFormat;
 	uint16_t currentSegment;
-	bool isBlinking;
+	bool isColonBlinking;
+	bool isDisplayBlinking;
+	uint16_t blinkCounter;
 }ClockDisplay_T;
 
 // helper enumerator so we can use indexing for numbers[] but still
 // access the colon and all segments values which have no obvious index
 enum extraNumbers {
 		COLON = 10,
+		AM_PM,
 		ALL,
 };
 
 // a sum of pins needed to display numbers 0-9. Array index corresponds to display number
-static const uint16_t numbers[12] = {
+static const uint16_t numbers[13] = {
 /* 0 */ 	GPIO_Pin_12 | GPIO_Pin_13,
 /* 1 */ 	GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
 /* 2 */ 	GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_13,
@@ -34,6 +37,7 @@ static const uint16_t numbers[12] = {
 /* 8 */ 	GPIO_Pin_13,
 /* 9 */ 	GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13,
 /* COLON */ GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
+/* AM_PM */ GPIO_Pin_13,
 /* ALL */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
 };
 static const GPIO_TypeDef* display_bank = GPIOE;
@@ -49,8 +53,7 @@ static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pi
 static const GPIO_TypeDef* digit_bank = GPIOD;
 
 // Global variables
-extern volatile uint16_t currentClockSegment;
-extern volatile ClockDisplay_T clockDisplay;
+extern volatile ClockDisplay_T GClockDisplay;
 
 /*
  * ClockDisplay_Init
@@ -74,6 +77,8 @@ void ClockDisplay_Init();
  */
 uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time);
 
+uint16_t ClockDisplay_AssignTimeDigitMinSec(RTC_TimeTypeDef *time);
+
 /*
  * ClockDisplay_Clear
  *
@@ -86,6 +91,8 @@ void ClockDisplay_Clear();
 void ClockDisplay_UpdateTime();
 
 void ClockDisplay_IncrementClockSegment();
+
+uint16_t ClockDisplay_DetermineBlinkBehavior(uint16_t displayPins);
 
 RTC_TimeTypeDef ClockDisplay_UpdateFromRTC();
 RTC_TimeTypeDef ClockDisplay_UpdateFromTimeSet();

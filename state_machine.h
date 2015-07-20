@@ -10,4 +10,6 @@ void State_ToggleOrangeLED();
 void State_ToggleGreenLED();
 void State_SwapFunctions();
 
+void State_ToggleHourFormat();
+
 #endif /* STATE_MACHINE_H_ */

@@ -35,13 +35,13 @@ extern volatile int snoozeMemory = 0;
  * My code starts here
 */
 
-volatile uint16_t currentClockSegment = DIGIT_H10;
-
-volatile ClockDisplay_T clockDisplay = {
+volatile ClockDisplay_T GClockDisplay = {
 	.getTime_func = ClockDisplay_UpdateFromRTC,
 	.hourFormat = RTC_HourFormat_12,
 	.currentSegment = DIGIT_H10,
-	.isBlinking = false
+	.isColonBlinking = true,
+	.isDisplayBlinking = false,
+	.blinkCounter = 0
 };
 
 // Global variables for buttons
@@ -69,7 +69,7 @@ volatile Button_T GBtn_Minute = {
 	.isPressed = false,
 	.isLongPress = false,
 	.shortPress_func = State_SwapFunctions,
-	.longPress_func = State_ButtonDisabled
+	.longPress_func = State_ToggleHourFormat
 };
 
 volatile Button_T GBtn_Time = {
@@ -216,7 +216,7 @@ void configuration(void)
 	RTC_SetTime(RTC_Format_BCD, &myclockTimeStruct);
 
 	currentTime.RTC_H12 = RTC_H12_PM;
-	currentTime.RTC_Hours = 0x012;
+	currentTime.RTC_Hours = 0x01;
 	currentTime.RTC_Minutes = 0x00;
 	currentTime.RTC_Seconds = 0x00;
 	RTC_SetTime(RTC_Format_BCD, &currentTime);
