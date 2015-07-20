@@ -5,13 +5,11 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-//RTC structures
-RTC_InitTypeDef		myclockInitTypeStruct;
-RTC_TimeTypeDef		myclockTimeStruct;
-RTC_AlarmTypeDef	AlarmStruct;
-RTC_AlarmTypeDef 	alarmMemory;
+// global variables
+volatile RTC_TimeTypeDef currentTime;	// RTC time
 
-// Martial those global variables!
+int main(void);
+void configuration(void);
 
 
 #endif /* MAIN_H_ */

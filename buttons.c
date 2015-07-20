@@ -26,7 +26,7 @@ void Buttons_Init()
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_Init(button_bank, &GPIO_InitStruct);
 
 	// Long press timer, 1s
@@ -170,7 +170,9 @@ void TIM3_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET )
 	{
-#if 1
+#if DEBUG_BUTTON_TIMERS
+		State_ToggleBlueLED();
+#else
 		int i;
 		for (i = 0; i < NUM_BUTTONS; i++)
 		{
@@ -178,9 +180,6 @@ void TIM3_IRQHandler(void)
 		}
 
 		Buttons_SetTimerState(TIM3, DISABLE);
-#else
-		State_ToggleBlueLED();
-		GBtn_Alarm.shortPress_func();
 #endif
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 	}
@@ -188,6 +187,9 @@ void TIM3_IRQHandler(void)
 
 void Buttons_AssignStateFromStableInput(volatile Button_T *button)
 {
+	// because we are polling the buttons, we have to keep track of
+	// which button caused the debounce to initiate and then only
+	// do the behavior associate for that button
 	if (button->isBeingDebounced == true)
 	{
 		uint8_t pinState = GPIO_ReadInputDataBit(button_bank, button->pin);
@@ -228,7 +230,11 @@ void TIM7_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET )
 	{
-#if 1
+#if DEBUG_BUTTON_TIMERS
+		fastTimerToggle = fastTimerToggle == DISABLE ? ENABLE : DISABLE;
+		Buttons_SetTimerState(TIM3, fastTimerToggle);
+		State_ToggleOrangeLED();
+#else
 		int i;
 		for (i = 0; i < NUM_BUTTONS; i++)
 		{
@@ -237,11 +243,6 @@ void TIM7_IRQHandler(void)
 
 		// Disable the timer and reset the count
 		Buttons_SetTimerState(TIM7, DISABLE);
-
-#else
-		fastTimerToggle = fastTimerToggle == DISABLE ? ENABLE : DISABLE;
-		Buttons_SetTimerState(TIM3, fastTimerToggle);
-		GBtn_Alarm.longPress_func();
 #endif
 		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
 

@@ -8,5 +8,6 @@ void State_ToggleRedLED();
 void State_ToggleBlueLED();
 void State_ToggleOrangeLED();
 void State_ToggleGreenLED();
+void State_SwapFunctions();
 
 #endif /* STATE_MACHINE_H_ */

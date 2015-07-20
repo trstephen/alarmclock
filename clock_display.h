@@ -2,9 +2,17 @@
 #define CLOCK_DISPLAY_H_
 
 #include "stm32f4xx_gpio.h"
+#include "stm32f4xx_rtc.h"
+#include <stdbool.h>
 
+typedef RTC_TimeTypeDef(*TimeUpdateFunc_T)(void);
 
-static const GPIO_TypeDef* display_bank = GPIOE;
+typedef struct ClockDisplay{
+	TimeUpdateFunc_T getTime_func;
+	uint32_t hourFormat;
+	uint16_t currentSegment;
+	bool isBlinking;
+}ClockDisplay_T;
 
 // helper enumerator so we can use indexing for numbers[] but still
 // access the colon and all segments values which have no obvious index
@@ -28,19 +36,21 @@ static const uint16_t numbers[12] = {
 /* COLON */ GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
 /* ALL */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
 };
+static const GPIO_TypeDef* display_bank = GPIOE;
 
 // Digits on the clock display
 // #defines are used because switch statements need a runtime constant (static const aren't runtime constants :( )
-#define DIGIT_H10 GPIO_Pin_11
-#define DIGIT_H01 GPIO_Pin_10
-#define DIGIT_COLON GPIO_Pin_9
-#define DIGIT_M10 GPIO_Pin_8
-#define DIGIT_M01 GPIO_Pin_7
+#define DIGIT_H10 (GPIO_Pin_11)
+#define DIGIT_H01 (GPIO_Pin_10)
+#define DIGIT_COLON (GPIO_Pin_9)
+#define DIGIT_M10 (GPIO_Pin_8)
+#define DIGIT_M01 (GPIO_Pin_7)
 static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
 static const GPIO_TypeDef* digit_bank = GPIOD;
 
 // Global variables
 extern volatile uint16_t currentClockSegment;
+extern volatile ClockDisplay_T clockDisplay;
 
 /*
  * ClockDisplay_Init
@@ -51,26 +61,6 @@ extern volatile uint16_t currentClockSegment;
  * 			(GPIOE) and the segment selection diodes (GPIOD).
  */
 void ClockDisplay_Init();
-
-/*
- * ClockDisplay_Test
- *
- * input:	uint16_t* currentClockSegment
- * 				the pin connected to the transistor that turns an entire
- * 				clock digit on or off
- * output: 	null
- * descr:	Displays "12:34" on the clock
- */
-void ClockDisplay_Test(uint16_t *currentClockSegment);
-
-/*
- * ClockDisplay_TimeTest
- *
- * input:	none
- * output:	none
- * descr:	Takes decodes the current time for myClockStruct (global) and displays it
- */
-void ClockDisplay_TimeTest();
 
 /*
  * ClockDisplay_AssignTimeDigit
@@ -93,8 +83,12 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time);
  */
 void ClockDisplay_Clear();
 
-void ClockDisplay_GPIO_Init_Oops(GPIO_InitTypeDef* initStruct);
+void ClockDisplay_UpdateTime();
 
-void ClockDisplay_Test_Oops(uint16_t *currentClockSegment, GPIO_TypeDef* GPIOx, uint16_t H10, uint16_t H01);
+void ClockDisplay_IncrementClockSegment();
+
+RTC_TimeTypeDef ClockDisplay_UpdateFromRTC();
+RTC_TimeTypeDef ClockDisplay_UpdateFromTimeSet();
+RTC_TimeTypeDef ClockDisplay_UpdateFromAlarmSet();
 
 #endif /* CLOCK_DISPLAY_H_ */
