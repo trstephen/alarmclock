@@ -9,6 +9,9 @@
 
 #include "clock_display.h"
 
+static const GPIO_TypeDef* digit_bank = GPIOD;
+static const GPIO_TypeDef* display_bank = GPIOE;
+
 void ClockDisplay_Init()
 {
 	GPIO_InitTypeDef initStruct;
@@ -20,7 +23,7 @@ void ClockDisplay_Init()
 	initStruct.GPIO_Mode = GPIO_Mode_OUT;
 	initStruct.GPIO_OType = GPIO_OType_PP;
 	initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOE, &initStruct);
+	GPIO_Init(display_bank, &initStruct);
 
 	//configure GPIO for digit multiplexing
 	GPIO_StructInit( &initStruct );
@@ -29,7 +32,7 @@ void ClockDisplay_Init()
 	initStruct.GPIO_Mode = GPIO_Mode_OUT;
 	initStruct.GPIO_OType = GPIO_OType_PP;
 	initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOD, &initStruct);
+	GPIO_Init(digit_bank, &initStruct);
 }
 
 void ClockDisplay_UpdateTime()
@@ -127,15 +130,15 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 
 	// detect the edge case where there's a leading 0 in H10
 	// and clear the display value
-	if ( (GClockDisplay.currentSegment == DIGIT_H10)
-		&& (currentDigit == 0x0) )
+	if ( GClockDisplay.currentSegment == DIGIT_H10
+			&& currentDigit == 0x0)
 	{
 		displayPins = numbers[ALL]; // despite the awkward names, this illuminates no segments
 	}
 
 	// turn on the AM/PM indicator
 	if (GClockDisplay.currentSegment == DIGIT_M01
-			&&GClockDisplay.hourFormat == RTC_HourFormat_12
+			&& GClockDisplay.hourFormat == RTC_HourFormat_12
 			&& time->RTC_H12 == RTC_H12_PM)
 	{
 		displayPins = displayPins & ~(numbers[AM_PM]);
@@ -190,14 +193,14 @@ uint16_t ClockDisplay_DetermineBlinkBehavior(uint16_t displayPins)
 	// state every ~250 ticks will  give the appearance of a 1s period
 	GClockDisplay.blinkCounter = ++GClockDisplay.blinkCounter % 500;
 
-	if (GClockDisplay.currentSegment == DIGIT_COLON
-			&& GClockDisplay.isColonBlinking == true
-			&& GClockDisplay.blinkCounter < 250 )
+	if (GClockDisplay.isDisplayBlinking == true
+			&& GClockDisplay.blinkCounter < 250)
 	{
 		displayPins = numbers[ALL];
 	}
-	else if (GClockDisplay.isDisplayBlinking == true
-			&& GClockDisplay.blinkCounter < 250)
+	else if (GClockDisplay.currentSegment == DIGIT_COLON
+			&& GClockDisplay.isColonBlinking == true
+			&& GClockDisplay.blinkCounter < 250 )
 	{
 		displayPins = numbers[ALL];
 	}
@@ -212,4 +215,9 @@ RTC_TimeTypeDef ClockDisplay_UpdateFromRTC()
 	RTC_GetTime(RTC_HourFormat_12, &time);
 
 	return time;
+}
+
+RTC_TimeTypeDef ClockDisplay_UpdateFromTimeSet()
+{
+	return GNewTime;
 }

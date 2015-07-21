@@ -40,7 +40,6 @@ static const uint16_t numbers[13] = {
 /* AM_PM */ GPIO_Pin_13,
 /* ALL */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
 };
-static const GPIO_TypeDef* display_bank = GPIOE;
 
 // Digits on the clock display
 // #defines are used because switch statements need a runtime constant (static const aren't runtime constants :( )
@@ -50,9 +49,9 @@ static const GPIO_TypeDef* display_bank = GPIOE;
 #define DIGIT_M10 (GPIO_Pin_8)
 #define DIGIT_M01 (GPIO_Pin_7)
 static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
-static const GPIO_TypeDef* digit_bank = GPIOD;
 
 // Global variables
+volatile RTC_TimeTypeDef GNewTime;
 extern volatile ClockDisplay_T GClockDisplay;
 
 /*

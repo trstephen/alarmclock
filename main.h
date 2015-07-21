@@ -6,7 +6,9 @@
 #define MAIN_H_
 
 // global variables
-volatile RTC_TimeTypeDef currentTime;	// RTC time
+//volatile RTC_TimeTypeDef GCurrentTime;	// RTC time
+//volatile RTC_TimeTypeDef GNewClockTime;	// used to set new time for RTC
+volatile RTC_AlarmTypeDef GAlarm;
 
 int main(void);
 void configuration(void);

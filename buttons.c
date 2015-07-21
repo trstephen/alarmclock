@@ -6,6 +6,7 @@
  *
  ******************************************************************/
 #include "buttons.h"
+#include "clock_display.h"
 #include "misc.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_syscfg.h"
@@ -278,3 +279,89 @@ FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx)
 
 	return returnState;
 }
+
+void ButtonFunc_DisplayRTC()
+{
+
+}
+
+void ButtonFunc_Disabled()
+{
+	/* do nothing */
+}
+
+void ButtonFunc_ToggleRedLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
+}
+
+void ButtonFunc_ToggleBlueLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+}
+
+void ButtonFunc_ToggleOrangeLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
+}
+
+void ButtonFunc_ToggleGreenLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_12);
+}
+
+void ButtonFunc_SwapFunctions()
+{
+	if (GBtn_Alarm.shortPress_func == ButtonFunc_ToggleBlueLED)
+	{
+		GBtn_Alarm.shortPress_func = ButtonFunc_ToggleRedLED;
+	}
+	else
+	{
+		GBtn_Alarm.shortPress_func = ButtonFunc_ToggleBlueLED;
+	}
+
+	if (GBtn_Alarm.longPress_func == ButtonFunc_ToggleOrangeLED)
+	{
+		GBtn_Alarm.longPress_func = ButtonFunc_ToggleGreenLED;
+	}
+	else
+	{
+		GBtn_Alarm.longPress_func = ButtonFunc_ToggleOrangeLED;
+	}
+}
+
+void ButtonFunc_ToggleHourFormat()
+{
+	if (GClockDisplay.hourFormat == RTC_HourFormat_12)
+	{
+		GClockDisplay.hourFormat = RTC_HourFormat_24;
+	}
+	else
+	{
+		GClockDisplay.hourFormat = RTC_HourFormat_12;
+	}
+}
+
+void ButtonFunc_GetNewTime()
+{
+	GState.nextState = GET_NEW_TIME;
+}
+
+void ButtonFunc_SetNewTime()
+{
+	RTC_SetTime(RTC_Format_BCD, &GNewTime);
+
+	GState.nextState = DISPLAY_RTC;
+}
+
+void ButtonFunc_IncrementMinutes()
+{
+
+}
+
+void ButtonFunc_IncrementHours()
+{
+
+}
+

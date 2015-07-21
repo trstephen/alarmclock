@@ -5,69 +5,110 @@
  * descr:	encapsulates the state machine of the alarm clock
  *
  ******************************************************************/
+
 #include "buttons.h"
 #include "clock_display.h"
 #include "state_machine.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_rtc.h"
 
+extern volatile Button_T GBtn_Music;
+extern volatile Button_T GBtn_Hour;
+extern volatile Button_T GBtn_Minute;
+extern volatile Button_T GBtn_Time;
 extern volatile Button_T GBtn_Alarm;
 extern volatile ClockDisplay_T GClockDisplay;
+extern volatile RTC_TimeTypeDef GNewTime;
+volatile State_T GState;
 
-void State_ButtonDisabled()
-{
-	/* do nothing */
-}
+/* Placing the prototype here resolves a circular dependency between buttons.h and state_machine.h */
+void State_AssignNewFunctionsToButtons(volatile Button_T* button, ButtonFunc_T shortPressFunc, ButtonFunc_T longPressFunc);
 
-void State_ToggleRedLED()
+void State_UpdateState()
 {
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
-}
-
-void State_ToggleBlueLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-}
-
-void State_ToggleOrangeLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
-}
-
-void State_ToggleGreenLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_12);
-}
-
-void State_SwapFunctions()
-{
-	if (GBtn_Alarm.shortPress_func == State_ToggleBlueLED)
+	if (GState.currentState != GState.nextState)
 	{
-		GBtn_Alarm.shortPress_func = State_ToggleRedLED;
-	}
-	else
-	{
-		GBtn_Alarm.shortPress_func = State_ToggleBlueLED;
-	}
+		GState.currentState = GState.nextState;
 
-	if (GBtn_Alarm.longPress_func == State_ToggleOrangeLED)
-	{
-		GBtn_Alarm.longPress_func = State_ToggleGreenLED;
-	}
-	else
-	{
-		GBtn_Alarm.longPress_func = State_ToggleOrangeLED;
+		switch (GState.currentState) {
+			case DISPLAY_RTC:
+				State_DisplayRTC();
+				break;
+			case GET_NEW_TIME:
+				State_GetNewTime();
+				break;
+			case GET_ALARM_TIME:
+				State_GetAlarmTime();
+				break;
+			case PLAY_MP3:
+				State_PlayMP3();
+				break;
+			case PLAY_AUX:
+				State_PlayAux();
+				break;
+			case ALARM_ACTIVE:
+				State_AlarmActive();
+				break;
+			default:
+				GState.currentState = DISPLAY_RTC;
+				GState.nextState = DISPLAY_RTC;
+				State_DisplayRTC();
+				break;
+		}
 	}
 }
 
-void State_ToggleHourFormat()
+void State_AssignNewFunctionsToButtons(volatile Button_T *button, ButtonFunc_T shortPressFunc, ButtonFunc_T longPressFunc)
 {
-	if (GClockDisplay.hourFormat == RTC_HourFormat_12)
-	{
-		GClockDisplay.hourFormat = RTC_HourFormat_24;
-	}
-	else
-	{
-		GClockDisplay.hourFormat = RTC_HourFormat_12;
-	}
+	button->shortPress_func = shortPressFunc;
+	button->longPress_func = longPressFunc;
+}
+
+void State_DisplayRTC()
+{
+	GClockDisplay.getTime_func = ClockDisplay_UpdateFromRTC;
+	GClockDisplay.isColonBlinking = true;
+	GClockDisplay.isDisplayBlinking = false;
+
+	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_ToggleHourFormat, ButtonFunc_GetNewTime);
+	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_Disabled, ButtonFunc_Disabled);
+}
+
+void State_GetNewTime()
+{
+	// start setting the new time from the current time value
+	GNewTime = ClockDisplay_UpdateFromRTC();
+
+	GClockDisplay.getTime_func = ClockDisplay_UpdateFromTimeSet;
+	GClockDisplay.isColonBlinking = false;
+
+	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_IncrementHours, ButtonFunc_IncrementHours);
+	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_IncrementMinutes, ButtonFunc_IncrementMinutes);
+	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_SetNewTime, ButtonFunc_SetNewTime);
+	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_Disabled, ButtonFunc_Disabled);
+
+}
+
+void State_GetAlarmTime()
+{
+
+}
+
+void State_PlayMP3()
+{
+
+}
+
+void State_PlayAux()
+{
+
+}
+
+void State_AlarmActive()
+{
+
 }

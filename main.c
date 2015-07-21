@@ -34,6 +34,10 @@ extern volatile int snoozeMemory = 0;
 /*
  * My code starts here
 */
+extern volatile State_T GState = {
+	.currentState = DISPLAY_RTC,
+	.nextState = DISPLAY_RTC
+};
 
 volatile ClockDisplay_T GClockDisplay = {
 	.getTime_func = ClockDisplay_UpdateFromRTC,
@@ -50,8 +54,8 @@ volatile Button_T GBtn_Music = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = ButtonFunc_Disabled,
+	.longPress_func = ButtonFunc_Disabled
 };
 
 volatile Button_T GBtn_Hour = {
@@ -59,8 +63,8 @@ volatile Button_T GBtn_Hour = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = ButtonFunc_Disabled,
+	.longPress_func = ButtonFunc_Disabled
 };
 
 volatile Button_T GBtn_Minute = {
@@ -68,8 +72,8 @@ volatile Button_T GBtn_Minute = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_SwapFunctions,
-	.longPress_func = State_ToggleHourFormat
+	.shortPress_func = ButtonFunc_SwapFunctions,
+	.longPress_func = ButtonFunc_ToggleHourFormat
 };
 
 volatile Button_T GBtn_Time = {
@@ -77,8 +81,8 @@ volatile Button_T GBtn_Time = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = ButtonFunc_Disabled,
+	.longPress_func = ButtonFunc_Disabled
 };
 
 volatile Button_T GBtn_Alarm = {
@@ -86,8 +90,8 @@ volatile Button_T GBtn_Alarm = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ToggleBlueLED,
-	.longPress_func = State_ToggleOrangeLED
+	.shortPress_func = ButtonFunc_ToggleBlueLED,
+	.longPress_func = ButtonFunc_ToggleOrangeLED
 };
 
 int main(void)
@@ -101,6 +105,9 @@ int main(void)
 
 	while ( 1 )
 	{
+
+		State_UpdateState();
+
 		mp3PlayingFlag = 1;
 		audioToMp3();
 	}
@@ -125,6 +132,7 @@ void TIM5_IRQHandler(void)
 #if !DEBUG_BUTTON_TIMERS
 		Buttons_PollAllButtons();
 #endif
+
 		//clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
     }
@@ -153,6 +161,7 @@ void configuration(void)
 	GPIO_InitTypeDef initStruct;
 	TIM_TimeBaseInitTypeDef TIM_InitStruct;
 	RTC_InitTypeDef	myclockInitTypeStruct;
+	RTC_TimeTypeDef initTime;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	EXTI_InitTypeDef EXTI_InitStructure;
 
@@ -215,11 +224,11 @@ void configuration(void)
 	myclockTimeStruct.RTC_Seconds = 0x00;
 	RTC_SetTime(RTC_Format_BCD, &myclockTimeStruct);
 
-	currentTime.RTC_H12 = RTC_H12_PM;
-	currentTime.RTC_Hours = 0x01;
-	currentTime.RTC_Minutes = 0x00;
-	currentTime.RTC_Seconds = 0x00;
-	RTC_SetTime(RTC_Format_BCD, &currentTime);
+	initTime.RTC_H12 = RTC_H12_PM;
+	initTime.RTC_Hours = 0x01;
+	initTime.RTC_Minutes = 0x00;
+	initTime.RTC_Seconds = 0x00;
+	RTC_SetTime(RTC_Format_BCD, &initTime);
 
 
 	//sets alarmA for 12:00AM, date doesn't matter

@@ -7,16 +7,19 @@
 #include <stdbool.h>
 
 // Types
+typedef void(*ButtonFunc_T)(void);
+
 typedef struct Button{
 	uint16_t pin;					// the GPIO pin assigned to the button
 	bool isBeingDebounced;			// true if button has triggered debounce conditions
 	bool isPressed; 				// true if button is currently pressed
 	bool isLongPress;				// true if button has received a long press
-	StateFunc_T shortPress_func;	// function pointer to the short press behavior
-	StateFunc_T longPress_func; 	// function pointer to the long press behavior
+	ButtonFunc_T shortPress_func;	// function pointer to the short press behavior
+	ButtonFunc_T longPress_func; 	// function pointer to the long press behavior
 }Button_T;
 
 // Globals
+extern volatile State_T GState;
 extern volatile Button_T GBtn_Music;
 extern volatile Button_T GBtn_Hour;
 extern volatile Button_T GBtn_Minute;
@@ -144,5 +147,24 @@ void Buttons_SetTimerState(TIM_TypeDef *TIMx, FunctionalState newState);
  *  		memory address and masking the value.
  */
 FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx);
+
+void ButtonFunc_Disabled();
+void ButtonFunc_ToggleRedLED();
+void ButtonFunc_ToggleBlueLED();
+void ButtonFunc_ToggleOrangeLED();
+void ButtonFunc_ToggleGreenLED();
+void ButtonFunc_SwapFunctions();
+
+void ButtonFunc_DisplayRTC();
+
+void ButtonFunc_ToggleHourFormat();
+
+void ButtonFunc_GetNewTime();
+
+void ButtonFunc_SetNewTime();
+
+void ButtonFunc_IncrementMinutes();
+
+void ButtonFunc_IncrementHours();
 
 #endif /* BUTTONS_H_ */
