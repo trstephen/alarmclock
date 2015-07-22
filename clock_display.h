@@ -76,6 +76,8 @@ void ClockDisplay_Init();
  */
 uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time);
 
+void ClockDisplay_AdjustFor24HMode(RTC_TimeTypeDef *time);
+
 uint16_t ClockDisplay_AssignTimeDigitMinSec(RTC_TimeTypeDef *time);
 
 /*

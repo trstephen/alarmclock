@@ -357,11 +357,73 @@ void ButtonFunc_SetNewTime()
 
 void ButtonFunc_IncrementMinutes()
 {
+	RTC_TimeTypeDef *time;
 
+	switch (GState.currentState) {
+		case GET_NEW_TIME:
+			time = &GNewTime;
+			break;
+		case GET_ALARM_TIME:
+			/* set it to the alarm time struct */
+			break;
+		default:
+			/* just bail out, man */
+			return;
+	}
+
+	time->RTC_Minutes += 0x01;
+
+	// adapted from timekeeping.c
+
+	//allows 9 to roll over to 0 and 60 to 0
+	 if((time->RTC_Minutes & 0x0F) >= 0xA)
+	 {
+		 time->RTC_Minutes = (time->RTC_Minutes & 0x70 ) + 0x10;
+
+		 if((time->RTC_Minutes & 0x70 ) >= 0x60 )
+		 {
+			 time->RTC_Minutes = 0x00;
+		 }
+	 }
 }
 
 void ButtonFunc_IncrementHours()
 {
+	RTC_TimeTypeDef *time;
 
+	switch (GState.currentState) {
+		case GET_NEW_TIME:
+			time = &GNewTime;
+			break;
+		case GET_ALARM_TIME:
+			/* set it to the alarm time struct */
+			break;
+		default:
+			/* just bail out, man */
+			return;
+	}
+
+	time->RTC_Hours += 0x01;
+
+	// adapted from timekeeping.c
+
+	 //9 rolls over to 0
+	 if((time->RTC_Hours & 0x0F) >= 0xA)
+	 {
+		 time->RTC_Hours = (time->RTC_Hours & 0x30 ) + 0x10;
+
+	 }
+
+	 //if incrementing passes 12 -> toggles am/pm
+	 if(time->RTC_Hours == 0x12 )
+	 {
+		 time->RTC_H12 ^= 0x40;
+	 }
+
+	 //if incrementing hits hour 13, sets to 1 oclock
+	 if(time->RTC_Hours >= 0x13 )
+	 {
+		 time->RTC_Hours = 0x01;
+	 }
 }
 

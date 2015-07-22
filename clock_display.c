@@ -83,23 +83,15 @@ void ClockDisplay_IncrementClockSegment()
 
 uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 {
-	uint16_t currentDigit = 0;
-
 	// the RTC library can't toggle nicely between 12/24 formats
 	// so we'll always work in 12h and add +12h to visually
 	// correct for 24h format
-	if (GClockDisplay.hourFormat == RTC_HourFormat_24
-			&& time->RTC_H12 == RTC_H12_PM)
+	if (GClockDisplay.hourFormat == RTC_HourFormat_24)
 	{
-		time->RTC_Hours = time->RTC_Hours + 0x012;
+		ClockDisplay_AdjustFor24HMode(time);
 	}
-	// display midnight as 0:00
-	else if (GClockDisplay.hourFormat == RTC_HourFormat_24
-			&& time->RTC_H12 == RTC_H12_AM
-			&& time->RTC_Hours == 0x0)
-	{
-		time->RTC_Hours = time->RTC_Hours - 0x012;
-	}
+
+	uint16_t currentDigit = 0;
 
 	// determine the current digit to display by masking
 	// the appropriate RTC value
@@ -147,6 +139,61 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 	displayPins = ClockDisplay_DetermineBlinkBehavior(displayPins);
 
 	return displayPins;
+}
+
+void ClockDisplay_AdjustFor24HMode(RTC_TimeTypeDef *time)
+{
+	// midnight = 0h00
+	if (time->RTC_H12 == RTC_H12_AM
+			&& time->RTC_Hours == 0x012)
+	{
+		time->RTC_Hours = 0x00;
+	}
+	// shift 12->11pm to 12h->23h
+	if (time->RTC_H12 == RTC_H12_PM)
+	{
+		switch (time->RTC_Hours) {
+			case 0x012:
+				time->RTC_Hours = 0x012;
+				break;
+			case 0x01:
+				time->RTC_Hours = 0x013;
+				break;
+			case 0x02:
+				time->RTC_Hours = 0x014;
+				break;
+			case 0x03:
+				time->RTC_Hours = 0x015;
+				break;
+			case 0x04:
+				time->RTC_Hours = 0x016;
+				break;
+			case 0x05:
+				time->RTC_Hours = 0x017;
+				break;
+			case 0x06:
+				time->RTC_Hours = 0x018;
+				break;
+			case 0x07:
+				time->RTC_Hours = 0x019;
+				break;
+			case 0x08:
+				time->RTC_Hours = 0x020;
+				break;
+			case 0x09:
+				time->RTC_Hours = 0x021;
+				break;
+			case 0x010:
+				time->RTC_Hours = 0x022;
+				break;
+			case 0x011:
+				time->RTC_Hours = 0x023;
+				break;
+			default:
+				time->RTC_Hours = 0x088;
+				break;
+		}
+	}
 }
 
 uint16_t ClockDisplay_AssignTimeDigitMinSec(RTC_TimeTypeDef *time)

@@ -84,6 +84,7 @@ void State_GetNewTime()
 
 	GClockDisplay.getTime_func = ClockDisplay_UpdateFromTimeSet;
 	GClockDisplay.isColonBlinking = false;
+	GClockDisplay.isDisplayBlinking = false;
 
 	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
 	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_IncrementHours, ButtonFunc_IncrementHours);

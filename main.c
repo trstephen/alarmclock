@@ -44,7 +44,7 @@ volatile ClockDisplay_T GClockDisplay = {
 	.hourFormat = RTC_HourFormat_12,
 	.currentSegment = DIGIT_H10,
 	.isColonBlinking = true,
-	.isDisplayBlinking = false,
+	.isDisplayBlinking = true,
 	.blinkCounter = 0
 };
 
@@ -73,7 +73,7 @@ volatile Button_T GBtn_Minute = {
 	.isPressed = false,
 	.isLongPress = false,
 	.shortPress_func = ButtonFunc_SwapFunctions,
-	.longPress_func = ButtonFunc_ToggleHourFormat
+	.longPress_func = ButtonFunc_Disabled
 };
 
 volatile Button_T GBtn_Time = {
@@ -81,8 +81,8 @@ volatile Button_T GBtn_Time = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = ButtonFunc_Disabled,
-	.longPress_func = ButtonFunc_Disabled
+	.shortPress_func = ButtonFunc_ToggleHourFormat,
+	.longPress_func = ButtonFunc_GetNewTime
 };
 
 volatile Button_T GBtn_Alarm = {
@@ -106,7 +106,7 @@ int main(void)
 	while ( 1 )
 	{
 
-		State_UpdateState();
+//		State_UpdateState();
 
 		mp3PlayingFlag = 1;
 		audioToMp3();
@@ -132,6 +132,8 @@ void TIM5_IRQHandler(void)
 #if !DEBUG_BUTTON_TIMERS
 		Buttons_PollAllButtons();
 #endif
+
+		State_UpdateState();
 
 		//clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
@@ -217,15 +219,8 @@ void configuration(void)
 	myclockInitTypeStruct.RTC_SynchPrediv = 0x00FF;
 	RTC_Init(&myclockInitTypeStruct);
 
-	//set the time displayed on power up to 12PM
-	myclockTimeStruct.RTC_H12 = RTC_H12_PM;
-	myclockTimeStruct.RTC_Hours = 0x012;
-	myclockTimeStruct.RTC_Minutes = 0x00;
-	myclockTimeStruct.RTC_Seconds = 0x00;
-	RTC_SetTime(RTC_Format_BCD, &myclockTimeStruct);
-
 	initTime.RTC_H12 = RTC_H12_PM;
-	initTime.RTC_Hours = 0x01;
+	initTime.RTC_Hours = 0x012;
 	initTime.RTC_Minutes = 0x00;
 	initTime.RTC_Seconds = 0x00;
 	RTC_SetTime(RTC_Format_BCD, &initTime);
