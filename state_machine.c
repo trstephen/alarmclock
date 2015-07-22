@@ -19,6 +19,7 @@ extern volatile Button_T GBtn_Time;
 extern volatile Button_T GBtn_Alarm;
 extern volatile ClockDisplay_T GClockDisplay;
 extern volatile RTC_TimeTypeDef GNewTime;
+extern volatile RTC_AlarmTypeDef GAlarm;
 volatile State_T GState;
 
 /* Placing the prototype here resolves a circular dependency between buttons.h and state_machine.h */
@@ -74,7 +75,7 @@ void State_DisplayRTC()
 	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_Disabled, ButtonFunc_Disabled);
 	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_Disabled, ButtonFunc_Disabled);
 	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_ToggleHourFormat, ButtonFunc_GetNewTime);
-	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_ToggleAlarm, ButtonFunc_GetAlarmTime);
 }
 
 void State_GetNewTime()
@@ -96,7 +97,18 @@ void State_GetNewTime()
 
 void State_GetAlarmTime()
 {
+	// start setting the new time from the current alarm time
+	GNewTime = GAlarm.RTC_AlarmTime;
 
+	GClockDisplay.getTime_func = ClockDisplay_UpdateFromTimeSet;
+	GClockDisplay.isColonBlinking = false;
+	GClockDisplay.isDisplayBlinking = false;
+
+	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_IncrementHours, ButtonFunc_IncrementHours);
+	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_IncrementMinutes, ButtonFunc_IncrementMinutes);
+	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_SetAlarmTime, ButtonFunc_SetAlarmTime);
 }
 
 void State_PlayMP3()

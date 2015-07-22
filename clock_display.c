@@ -8,6 +8,9 @@
  ******************************************************************/
 
 #include "clock_display.h"
+#include "state_machine.h"
+
+extern volatile State_T GState;
 
 static const GPIO_TypeDef* digit_bank = GPIOD;
 static const GPIO_TypeDef* display_bank = GPIOE;
@@ -136,6 +139,13 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 		displayPins = displayPins & ~(numbers[AM_PM]);
 	}
 
+	// alarm active indicator
+	if (GClockDisplay.currentSegment == DIGIT_COLON
+			&& GState.isAlarmSet == true)
+	{
+		displayPins = displayPins & ~(numbers[ALARM]);
+	}
+
 	displayPins = ClockDisplay_DetermineBlinkBehavior(displayPins);
 
 	return displayPins;
@@ -240,14 +250,24 @@ uint16_t ClockDisplay_DetermineBlinkBehavior(uint16_t displayPins)
 	// state every ~250 ticks will  give the appearance of a 1s period
 	GClockDisplay.blinkCounter = ++GClockDisplay.blinkCounter % 500;
 
+	// blink the entire display
 	if (GClockDisplay.isDisplayBlinking == true
 			&& GClockDisplay.blinkCounter < 250)
 	{
 		displayPins = numbers[ALL];
 	}
+	// blink the colon but not the
 	else if (GClockDisplay.currentSegment == DIGIT_COLON
-			&& GClockDisplay.isColonBlinking == true
-			&& GClockDisplay.blinkCounter < 250 )
+			&& GClockDisplay.blinkCounter < 250
+			&& GState.isAlarmSet == true
+			&& GClockDisplay.isColonBlinking == true)
+	{
+		displayPins = numbers[ALL] & ~(numbers[ALARM]);
+	}
+	else if (GClockDisplay.currentSegment == DIGIT_COLON
+			&& GClockDisplay.blinkCounter < 250
+			&& GState.isAlarmSet == false
+			&& GClockDisplay.isColonBlinking == true)
 	{
 		displayPins = numbers[ALL];
 	}
@@ -267,4 +287,10 @@ RTC_TimeTypeDef ClockDisplay_UpdateFromRTC()
 RTC_TimeTypeDef ClockDisplay_UpdateFromTimeSet()
 {
 	return GNewTime;
+}
+
+
+RTC_TimeTypeDef ClockDisplay_UpdateFromAlarmSet()
+{
+	return GAlarm.RTC_AlarmTime;
 }

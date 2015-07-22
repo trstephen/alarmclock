@@ -3,12 +3,14 @@
 
 //#include "buttons.h"
 #include "stm32f4xx_gpio.h"
+#include <stdbool.h>
 
 typedef void(*StateFunc_T)(void);
 
 typedef struct State {
 	uint8_t currentState; // member of states enum
 	uint8_t nextState;
+	bool isAlarmSet;
 }State_T;
 
 enum states  {

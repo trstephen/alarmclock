@@ -167,4 +167,10 @@ void ButtonFunc_IncrementMinutes();
 
 void ButtonFunc_IncrementHours();
 
+void ButtonFunc_ToggleAlarm();
+
+void ButtonFunc_GetAlarmTime();
+
+void ButtonFunc_SetAlarmTime();
+
 #endif /* BUTTONS_H_ */

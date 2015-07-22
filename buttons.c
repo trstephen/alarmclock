@@ -357,19 +357,19 @@ void ButtonFunc_SetNewTime()
 
 void ButtonFunc_IncrementMinutes()
 {
-	RTC_TimeTypeDef *time;
+	RTC_TimeTypeDef *time = &GNewTime;
 
-	switch (GState.currentState) {
-		case GET_NEW_TIME:
-			time = &GNewTime;
-			break;
-		case GET_ALARM_TIME:
-			/* set it to the alarm time struct */
-			break;
-		default:
-			/* just bail out, man */
-			return;
-	}
+//	switch (GState.currentState) {
+//		case GET_NEW_TIME:
+//			time = &GNewTime;
+//			break;
+//		case GET_ALARM_TIME:
+//			/* set it to the alarm time struct */
+//			break;
+//		default:
+//			/* just bail out, man */
+//			return;
+//	}
 
 	time->RTC_Minutes += 0x01;
 
@@ -389,19 +389,19 @@ void ButtonFunc_IncrementMinutes()
 
 void ButtonFunc_IncrementHours()
 {
-	RTC_TimeTypeDef *time;
+	RTC_TimeTypeDef *time = &GNewTime;
 
-	switch (GState.currentState) {
-		case GET_NEW_TIME:
-			time = &GNewTime;
-			break;
-		case GET_ALARM_TIME:
-			/* set it to the alarm time struct */
-			break;
-		default:
-			/* just bail out, man */
-			return;
-	}
+//	switch (GState.currentState) {
+//		case GET_NEW_TIME:
+//			time = &GNewTime;
+//			break;
+//		case GET_ALARM_TIME:
+//			/* set it to the alarm time struct */
+//			break;
+//		default:
+//			/* just bail out, man */
+//			return;
+//	}
 
 	time->RTC_Hours += 0x01;
 
@@ -425,5 +425,39 @@ void ButtonFunc_IncrementHours()
 	 {
 		 time->RTC_Hours = 0x01;
 	 }
+}
+
+void ButtonFunc_ToggleAlarm()
+{
+	if (GState.isAlarmSet == true)
+	{
+		GState.isAlarmSet = false;
+		/* disable the alarm */
+	}
+	else
+	{
+		GState.isAlarmSet = true;
+		/* enable the alarm */
+	}
+//	RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+}
+
+void ButtonFunc_GetAlarmTime()
+{
+	GState.nextState = GET_ALARM_TIME;
+}
+
+void ButtonFunc_SetAlarmTime()
+{
+	GAlarm.RTC_AlarmTime = GNewTime;
+	GAlarm.RTC_AlarmTime.RTC_Seconds = 0x00;
+	GAlarm.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
+	RTC_SetAlarm(RTC_Format_BCD, RTC_Alarm_A, &GAlarm);
+
+	RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+
+	GState.isAlarmSet = true;
+
+	GState.nextState = DISPLAY_RTC;
 }
 

@@ -14,6 +14,7 @@ typedef struct ClockDisplay{
 	bool isColonBlinking;
 	bool isDisplayBlinking;
 	uint16_t blinkCounter;
+	bool isAlarmActive;
 }ClockDisplay_T;
 
 // helper enumerator so we can use indexing for numbers[] but still
@@ -21,11 +22,12 @@ typedef struct ClockDisplay{
 enum extraNumbers {
 		COLON = 10,
 		AM_PM,
+		ALARM,
 		ALL,
 };
 
 // a sum of pins needed to display numbers 0-9. Array index corresponds to display number
-static const uint16_t numbers[13] = {
+static const uint16_t numbers[14] = {
 /* 0 */ 	GPIO_Pin_12 | GPIO_Pin_13,
 /* 1 */ 	GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
 /* 2 */ 	GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_13,
@@ -38,6 +40,7 @@ static const uint16_t numbers[13] = {
 /* 9 */ 	GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13,
 /* COLON */ GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
 /* AM_PM */ GPIO_Pin_13,
+/* ALARM */ GPIO_Pin_8,
 /* ALL */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
 };
 
@@ -53,6 +56,7 @@ static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pi
 // Global variables
 volatile RTC_TimeTypeDef GNewTime;
 extern volatile ClockDisplay_T GClockDisplay;
+extern volatile RTC_AlarmTypeDef GAlarm;
 
 /*
  * ClockDisplay_Init

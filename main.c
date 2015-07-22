@@ -36,7 +36,8 @@ extern volatile int snoozeMemory = 0;
 */
 extern volatile State_T GState = {
 	.currentState = DISPLAY_RTC,
-	.nextState = DISPLAY_RTC
+	.nextState = DISPLAY_RTC,
+	.isAlarmSet = false
 };
 
 volatile ClockDisplay_T GClockDisplay = {
@@ -63,8 +64,8 @@ volatile Button_T GBtn_Hour = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = ButtonFunc_Disabled,
-	.longPress_func = ButtonFunc_Disabled
+	.shortPress_func = ButtonFunc_ToggleBlueLED,
+	.longPress_func = ButtonFunc_ToggleOrangeLED
 };
 
 volatile Button_T GBtn_Minute = {
@@ -90,8 +91,8 @@ volatile Button_T GBtn_Alarm = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = ButtonFunc_ToggleBlueLED,
-	.longPress_func = ButtonFunc_ToggleOrangeLED
+	.shortPress_func = ButtonFunc_ToggleAlarm,
+	.longPress_func = ButtonFunc_GetAlarmTime
 };
 
 int main(void)
@@ -219,6 +220,7 @@ void configuration(void)
 	myclockInitTypeStruct.RTC_SynchPrediv = 0x00FF;
 	RTC_Init(&myclockInitTypeStruct);
 
+	// initial time: 12:00 PM
 	initTime.RTC_H12 = RTC_H12_PM;
 	initTime.RTC_Hours = 0x012;
 	initTime.RTC_Minutes = 0x00;
@@ -227,7 +229,7 @@ void configuration(void)
 
 
 	//sets alarmA for 12:00AM, date doesn't matter
-	AlarmStruct.RTC_AlarmTime.RTC_H12 = RTC_H12_AM;
+	AlarmStruct.RTC_AlarmTime.RTC_H12 = RTC_H12_PM;
 	AlarmStruct.RTC_AlarmTime.RTC_Hours = 0x12;
 	AlarmStruct.RTC_AlarmTime.RTC_Minutes = 0x00;
 	AlarmStruct.RTC_AlarmTime.RTC_Seconds = 0x00;
