@@ -1,17 +1,50 @@
-/******************************************************************
- * file: 	buttons.c
- * author:	T. Stephen
- * date: 	9 July, 2015
- * descr:	handles signals from external buttons on the alarm
- *
- ******************************************************************/
+/*******************************************************************************
+ file: 		buttons.c
+ author:	T. Stephen
+ date: 		9 July, 2015
+ descr:		Provides button debouncing with a mixture of polling and timer
+ 					interrupts. It is able to discriminate between a short button press
+					and a long (greater than one second) press. Each button has a
+					shortPress_func and a longPress_func which are set by the state
+					machine. All button actions are defined in buttons.c and are prefixed
+					ButtonFunc_
+ ******************************************************************************/
 #include "buttons.h"
 #include "clock_display.h"
 #include "misc.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_syscfg.h"
-#include "stm32f4xx_tim.h"
 
+/****************
+*	Global Variables
+*****************/
+extern volatile State_T GState;
+extern volatile Button_T GBtn_Music;
+extern volatile Button_T GBtn_Hour;
+extern volatile Button_T GBtn_Minute;
+extern volatile Button_T GBtn_Time;
+extern volatile Button_T GBtn_Alarm;
+extern volatile int mp3PlayingFlag;
+extern volatile int exitMp3;
+//volatile int safelyExitMp3;
+
+/****************
+*	Constants
+*****************/
+// make it easier to iterate over all buttons
+#define NUM_BUTTONS (5)
+static const Button_T* buttons[NUM_BUTTONS] = {
+		&GBtn_Music,
+		&GBtn_Hour,
+		&GBtn_Minute,
+		&GBtn_Time,
+		&GBtn_Alarm
+};
+static const GPIO_TypeDef* button_bank = GPIOC;
+
+/****************
+*	Functions
+*****************/
 void Buttons_Init()
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -59,9 +92,7 @@ void Buttons_Init()
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init( &NVIC_InitStruct );
 
-//	Buttons_SetTimerState(TIM7, ENABLE);
-//	Buttons_SetTimerState(TIM3, ENABLE);
-
+	// enable the interrupts
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
 	TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE);
 
@@ -94,7 +125,7 @@ void Buttons_Debounce(volatile Button_T *button)
 		&& pinState == Bit_SET
 		&& debounceTimerState == DISABLE)
 	{
-		/* enable DB and LP timers and set button's debounce flag to true*/
+		/* enable debounce and long press timers and set button state flags */
 		Buttons_SetTimerState(TIM3, ENABLE);
 		Buttons_SetTimerState(TIM7, ENABLE);
 		button->isBeingDebounced = true;
@@ -113,7 +144,7 @@ void Buttons_Debounce(volatile Button_T *button)
 		&& debounceTimerState == ENABLE
 		&& button->isBeingDebounced == true)
 	{
-		/* reset DB and LP timers */
+		/* reset debounce and long press timers */
 		TIM_SetCounter(TIM3, 0);
 		TIM_SetCounter(TIM7, 0);
 	}
@@ -136,7 +167,7 @@ void Buttons_Debounce(volatile Button_T *button)
 		&& pinState == Bit_RESET
 		&& debounceTimerState == DISABLE)
 	{
-		/* enable DB timer */
+		/* enable debounce timer */
 		Buttons_SetTimerState(TIM3, ENABLE);
 		button->isBeingDebounced = true;
 	}
@@ -154,7 +185,7 @@ void Buttons_Debounce(volatile Button_T *button)
 		&& debounceTimerState == ENABLE
 		&& button->isBeingDebounced == true)
 	{
-		/* reset DB timer */
+		/* reset debounce timer */
 		TIM_SetCounter(TIM3, 0);
 	}
 	// waiting for fall debounce to activate
@@ -171,9 +202,6 @@ void TIM3_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET )
 	{
-#if DEBUG_BUTTON_TIMERS
-		State_ToggleBlueLED();
-#else
 		int i;
 		for (i = 0; i < NUM_BUTTONS; i++)
 		{
@@ -181,7 +209,6 @@ void TIM3_IRQHandler(void)
 		}
 
 		Buttons_SetTimerState(TIM3, DISABLE);
-#endif
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 	}
 }
@@ -256,7 +283,6 @@ void Buttons_AssignStateFromLongPress(volatile Button_T *button)
 
 void Buttons_SetTimerState(TIM_TypeDef *TIMx, FunctionalState newState)
 {
-//	TIM_ITConfig(TIMx, TIM_IT_Update, newState);
 	TIM_Cmd(TIMx, newState);
 	TIM_SetCounter(TIMx, 0);
 }
@@ -284,47 +310,6 @@ void ButtonFunc_Disabled()
 	/* do nothing */
 }
 
-void ButtonFunc_ToggleRedLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
-}
-
-void ButtonFunc_ToggleBlueLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-}
-
-void ButtonFunc_ToggleOrangeLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
-}
-
-void ButtonFunc_ToggleGreenLED()
-{
-	GPIO_ToggleBits(GPIOD, GPIO_Pin_12);
-}
-
-void ButtonFunc_SwapFunctions()
-{
-	if (GBtn_Alarm.shortPress_func == ButtonFunc_ToggleBlueLED)
-	{
-		GBtn_Alarm.shortPress_func = ButtonFunc_ToggleRedLED;
-	}
-	else
-	{
-		GBtn_Alarm.shortPress_func = ButtonFunc_ToggleBlueLED;
-	}
-
-	if (GBtn_Alarm.longPress_func == ButtonFunc_ToggleOrangeLED)
-	{
-		GBtn_Alarm.longPress_func = ButtonFunc_ToggleGreenLED;
-	}
-	else
-	{
-		GBtn_Alarm.longPress_func = ButtonFunc_ToggleOrangeLED;
-	}
-}
-
 void ButtonFunc_ToggleHourFormat()
 {
 	if (GClockDisplay.hourFormat == RTC_HourFormat_12)
@@ -339,6 +324,9 @@ void ButtonFunc_ToggleHourFormat()
 
 void ButtonFunc_GetNewTime()
 {
+	// start setting the new time from the current time value
+	GNewTime = ClockDisplay_UpdateFromRTC();
+
 	GState.nextState = GET_NEW_TIME;
 }
 
@@ -351,73 +339,45 @@ void ButtonFunc_SetNewTime()
 
 void ButtonFunc_IncrementMinutes()
 {
-	RTC_TimeTypeDef *time = &GNewTime;
-
-//	switch (GState.currentState) {
-//		case GET_NEW_TIME:
-//			time = &GNewTime;
-//			break;
-//		case GET_ALARM_TIME:
-//			/* set it to the alarm time struct */
-//			break;
-//		default:
-//			/* just bail out, man */
-//			return;
-//	}
-
-	time->RTC_Minutes += 0x01;
+	GNewTime.RTC_Minutes += 0x01;
 
 	// adapted from timekeeping.c
 
 	//allows 9 to roll over to 0 and 60 to 0
-	 if((time->RTC_Minutes & 0x0F) >= 0xA)
+	 if((GNewTime.RTC_Minutes & 0x0F) >= 0xA)
 	 {
-		 time->RTC_Minutes = (time->RTC_Minutes & 0x70 ) + 0x10;
+		 GNewTime.RTC_Minutes = (GNewTime.RTC_Minutes & 0x70 ) + 0x10;
 
-		 if((time->RTC_Minutes & 0x70 ) >= 0x60 )
+		 if((GNewTime.RTC_Minutes & 0x70 ) >= 0x60 )
 		 {
-			 time->RTC_Minutes = 0x00;
+			 GNewTime.RTC_Minutes = 0x00;
 		 }
 	 }
 }
 
 void ButtonFunc_IncrementHours()
 {
-	RTC_TimeTypeDef *time = &GNewTime;
-
-//	switch (GState.currentState) {
-//		case GET_NEW_TIME:
-//			time = &GNewTime;
-//			break;
-//		case GET_ALARM_TIME:
-//			/* set it to the alarm time struct */
-//			break;
-//		default:
-//			/* just bail out, man */
-//			return;
-//	}
-
-	time->RTC_Hours += 0x01;
+	GNewTime.RTC_Hours += 0x01;
 
 	// adapted from timekeeping.c
 
 	 //9 rolls over to 0
-	 if((time->RTC_Hours & 0x0F) >= 0xA)
+	 if((GNewTime.RTC_Hours & 0x0F) >= 0xA)
 	 {
-		 time->RTC_Hours = (time->RTC_Hours & 0x30 ) + 0x10;
+		 GNewTime.RTC_Hours = (GNewTime.RTC_Hours & 0x30 ) + 0x10;
 
 	 }
 
 	 //if incrementing passes 12 -> toggles am/pm
-	 if(time->RTC_Hours == 0x12 )
+	 if(GNewTime.RTC_Hours == 0x12 )
 	 {
-		 time->RTC_H12 ^= 0x40;
+		 GNewTime.RTC_H12 ^= 0x40;
 	 }
 
 	 //if incrementing hits hour 13, sets to 1 oclock
-	 if(time->RTC_Hours >= 0x13 )
+	 if(GNewTime.RTC_Hours >= 0x13 )
 	 {
-		 time->RTC_Hours = 0x01;
+		 GNewTime.RTC_Hours = 0x01;
 	 }
 }
 
@@ -437,6 +397,9 @@ void ButtonFunc_ToggleAlarm()
 
 void ButtonFunc_GetAlarmTime()
 {
+	// start setting the new time from the current alarm time
+	GNewTime = GAlarm.RTC_AlarmTime;
+
 	GState.nextState = GET_ALARM_TIME;
 }
 
@@ -484,5 +447,46 @@ void ButtonFunc_ToggleMusic()
 		exitMp3 = 1;
 //		safelyExitMp3 = 1;
 //		GPIO_SetBits(GPIOD, GPIO_Pin_6);
+	}
+}
+
+void ButtonFunc_ToggleRedLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
+}
+
+void ButtonFunc_ToggleBlueLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+}
+
+void ButtonFunc_ToggleOrangeLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
+}
+
+void ButtonFunc_ToggleGreenLED()
+{
+	GPIO_ToggleBits(GPIOD, GPIO_Pin_12);
+}
+
+void ButtonFunc_SwapFunctions()
+{
+	if (GBtn_Alarm.shortPress_func == ButtonFunc_ToggleBlueLED)
+	{
+		GBtn_Alarm.shortPress_func = ButtonFunc_ToggleRedLED;
+	}
+	else
+	{
+		GBtn_Alarm.shortPress_func = ButtonFunc_ToggleBlueLED;
+	}
+
+	if (GBtn_Alarm.longPress_func == ButtonFunc_ToggleOrangeLED)
+	{
+		GBtn_Alarm.longPress_func = ButtonFunc_ToggleGreenLED;
+	}
+	else
+	{
+		GBtn_Alarm.longPress_func = ButtonFunc_ToggleOrangeLED;
 	}
 }

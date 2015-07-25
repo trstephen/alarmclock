@@ -1,10 +1,12 @@
-/******************************************************************
- * file: 	state_machine.c
- * author:	T. Stephen
- * date: 	17 July, 2015
- * descr:	encapsulates the state machine of the alarm clock
- *
- ******************************************************************/
+/*******************************************************************************
+ 	file: 	state_machine.c
+ 	author:	T. Stephen
+ 	date: 	17 July, 2015
+	descr:	Provides variables to maintain the machine state. When the state
+					changes, the button functions and clock behavior are changed.
+					Other activities which do not require buttons to be remapped are
+					encapsulated in a ButtonFunc_.
+ ******************************************************************************/
 
 #include "buttons.h"
 #include "clock_display.h"
@@ -12,6 +14,9 @@
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_rtc.h"
 
+/****************
+*	Global Variables
+*****************/
 extern volatile Button_T GBtn_Music;
 extern volatile Button_T GBtn_Hour;
 extern volatile Button_T GBtn_Minute;
@@ -22,9 +27,16 @@ extern volatile RTC_TimeTypeDef GNewTime;
 extern volatile RTC_AlarmTypeDef GAlarm;
 volatile State_T GState;
 
+/****************
+*	Prototypes
+*****************/
 /* Placing the prototype here resolves a circular dependency between buttons.h and state_machine.h */
-void State_AssignNewFunctionsToButtons(volatile Button_T* button, ButtonFunc_T shortPressFunc, ButtonFunc_T longPressFunc);
+void State_AssignNewFunctionsToButtons(volatile Button_T* button,
+				ButtonFunc_T shortPressFunc, ButtonFunc_T longPressFunc);
 
+/****************
+*	Functions
+*****************/
 void State_UpdateState()
 {
 	if (GState.currentState != GState.nextState)
@@ -80,9 +92,6 @@ void State_DisplayRTC()
 
 void State_GetNewTime()
 {
-	// start setting the new time from the current time value
-	GNewTime = ClockDisplay_UpdateFromRTC();
-
 	GClockDisplay.getTime_func = ClockDisplay_UpdateFromTimeSet;
 	GClockDisplay.isColonBlinking = false;
 	GClockDisplay.isDisplayBlinking = false;
@@ -97,9 +106,6 @@ void State_GetNewTime()
 
 void State_GetAlarmTime()
 {
-	// start setting the new time from the current alarm time
-	GNewTime = GAlarm.RTC_AlarmTime;
-
 	GClockDisplay.getTime_func = ClockDisplay_UpdateFromTimeSet;
 	GClockDisplay.isColonBlinking = false;
 	GClockDisplay.isDisplayBlinking = false;
