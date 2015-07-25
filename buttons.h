@@ -25,6 +25,9 @@ extern volatile Button_T GBtn_Hour;
 extern volatile Button_T GBtn_Minute;
 extern volatile Button_T GBtn_Time;
 extern volatile Button_T GBtn_Alarm;
+extern volatile int mp3PlayingFlag;
+extern volatile int exitMp3;
+//volatile int safelyExitMp3;
 #define NUM_BUTTONS (5)
 
 // Constants
@@ -37,10 +40,6 @@ static const Button_T* buttons[NUM_BUTTONS] = {
 		&GBtn_Alarm
 };
 
-
-// some debug junk
-#define DEBUG_BUTTON_TIMERS 0
-static FunctionalState fastTimerToggle = DISABLE;
 
 /*
  * Buttons_Init
@@ -172,5 +171,11 @@ void ButtonFunc_ToggleAlarm();
 void ButtonFunc_GetAlarmTime();
 
 void ButtonFunc_SetAlarmTime();
+
+void ButtonFunc_Snooze();
+
+void ButtonFunc_DisableAlarm();
+
+void ButtonFunc_ToggleMusic();
 
 #endif /* BUTTONS_H_ */

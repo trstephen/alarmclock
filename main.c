@@ -30,6 +30,7 @@ int interruptOccurred = 0;
 extern volatile int exitMp3 = 0;
 extern volatile int mp3PlayingFlag = 0;
 extern volatile int snoozeMemory = 0;
+//extern volatile int safelyExitMp3 = 0;
 
 /*
  * My code starts here
@@ -55,7 +56,7 @@ volatile Button_T GBtn_Music = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = ButtonFunc_Disabled,
+	.shortPress_func = ButtonFunc_ToggleMusic,
 	.longPress_func = ButtonFunc_Disabled
 };
 
@@ -109,8 +110,13 @@ int main(void)
 
 //		State_UpdateState();
 
-		mp3PlayingFlag = 1;
-		audioToMp3();
+//		mp3PlayingFlag = 1;
+//		audioToMp3();
+
+		if (mp3PlayingFlag)
+		{
+			audioToMp3();
+		}
 	}
 }
 
@@ -121,18 +127,12 @@ void TIM5_IRQHandler(void)
 {
 	int previousState = 0;
 
-#if DEBUG_BUTTON_TIMERS
-	TIM_Cmd(TIM7, ENABLE);
-#endif
-
 	//double checks that interrupt has occurred
 	if( TIM_GetITStatus( TIM5, TIM_IT_Update ) != RESET )
 	{
 		ClockDisplay_UpdateTime();
 
-#if !DEBUG_BUTTON_TIMERS
 		Buttons_PollAllButtons();
-#endif
 
 		State_UpdateState();
 
@@ -150,6 +150,8 @@ void RTC_Alarm_IRQHandler(void)
 	//resets alarm flags and sets flag to play mp3
 	if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
 	{
+		GState.nextState = ALARM_ACTIVE;
+
 		RTC_ClearFlag(RTC_FLAG_ALRAF);
 		RTC_ClearITPendingBit(RTC_IT_ALRA);
 		EXTI_ClearITPendingBit(EXTI_Line17);
@@ -214,6 +216,11 @@ void configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init( &NVIC_InitStructure );
 
+	//enables timer interrupt
+	TIM5->DIER |= TIM_IT_Update;
+	//enables timer
+	TIM5->CR1 |= TIM_CR1_CEN;
+
 	//setup the RTC for 12 hour format
 	myclockInitTypeStruct.RTC_HourFormat = RTC_HourFormat_12;
 	myclockInitTypeStruct.RTC_AsynchPrediv = 127;
@@ -229,12 +236,12 @@ void configuration(void)
 
 
 	//sets alarmA for 12:00AM, date doesn't matter
-	AlarmStruct.RTC_AlarmTime.RTC_H12 = RTC_H12_PM;
-	AlarmStruct.RTC_AlarmTime.RTC_Hours = 0x12;
-	AlarmStruct.RTC_AlarmTime.RTC_Minutes = 0x00;
-	AlarmStruct.RTC_AlarmTime.RTC_Seconds = 0x00;
-	AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
-	RTC_SetAlarm(RTC_Format_BCD,RTC_Alarm_A,&AlarmStruct);
+	GAlarm.RTC_AlarmTime.RTC_H12 = RTC_H12_AM;
+	GAlarm.RTC_AlarmTime.RTC_Hours = 0x012;
+	GAlarm.RTC_AlarmTime.RTC_Minutes = 0x00;
+	GAlarm.RTC_AlarmTime.RTC_Seconds = 0x000;
+	GAlarm.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
+	RTC_SetAlarm(RTC_Format_BCD,RTC_Alarm_A,&GAlarm);
 
 	// Enable the Alarm global Interrupt
 	NVIC_Init( &NVIC_InitStructure );
@@ -244,18 +251,12 @@ void configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init( &NVIC_InitStructure );
 
+	//enables RTC alarm A interrupt
+	RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+
 	Buttons_Init();
 
 	Audio_Init();
 
 	ClockDisplay_Init();
-
-	//enables RTC alarm A interrupt
-	RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-
-	//enables timer interrupt
-	TIM5->DIER |= TIM_IT_Update;
-
-	//enables timer
-	TIM5->CR1 |= TIM_CR1_CEN;
 }

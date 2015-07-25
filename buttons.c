@@ -231,11 +231,6 @@ void TIM7_IRQHandler(void)
 {
 	if( TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET )
 	{
-#if DEBUG_BUTTON_TIMERS
-		fastTimerToggle = fastTimerToggle == DISABLE ? ENABLE : DISABLE;
-		Buttons_SetTimerState(TIM3, fastTimerToggle);
-		State_ToggleOrangeLED();
-#else
 		int i;
 		for (i = 0; i < NUM_BUTTONS; i++)
 		{
@@ -244,7 +239,6 @@ void TIM7_IRQHandler(void)
 
 		// Disable the timer and reset the count
 		Buttons_SetTimerState(TIM7, DISABLE);
-#endif
 		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
 
 	}
@@ -432,14 +426,13 @@ void ButtonFunc_ToggleAlarm()
 	if (GState.isAlarmSet == true)
 	{
 		GState.isAlarmSet = false;
-		/* disable the alarm */
+		RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
 	}
 	else
 	{
 		GState.isAlarmSet = true;
-		/* enable the alarm */
+		RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 	}
-//	RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 }
 
 void ButtonFunc_GetAlarmTime()
@@ -461,3 +454,35 @@ void ButtonFunc_SetAlarmTime()
 	GState.nextState = DISPLAY_RTC;
 }
 
+void ButtonFunc_Snooze()
+{
+	/* Enable the second alarm for now + 10min */
+	GState.nextState = DISPLAY_RTC;
+}
+
+void ButtonFunc_DisableAlarm()
+{
+	RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+
+	GState.isAlarmSet = false;
+	GState.nextState = DISPLAY_RTC;
+}
+
+
+void ButtonFunc_ToggleMusic()
+{
+	if (mp3PlayingFlag == 0)
+	{
+		mp3PlayingFlag = 1;
+		exitMp3 = 0;
+//		safelyExitMp3 = 0;
+//		GPIO_ResetBits(GPIOD, GPIO_Pin_6);
+	}
+	else
+	{
+		mp3PlayingFlag = 0;
+		exitMp3 = 1;
+//		safelyExitMp3 = 1;
+//		GPIO_SetBits(GPIOD, GPIO_Pin_6);
+	}
+}

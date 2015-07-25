@@ -21,7 +21,7 @@ void ClockDisplay_Init()
 
 	//configure GPIO for segments
 	GPIO_StructInit( &initStruct );
-	initStruct.GPIO_Pin = numbers[ALL];
+	initStruct.GPIO_Pin = numbers[NONE];
 	initStruct.GPIO_Speed = GPIO_Speed_2MHz;
 	initStruct.GPIO_Mode = GPIO_Mode_OUT;
 	initStruct.GPIO_OType = GPIO_OType_PP;
@@ -56,7 +56,7 @@ void ClockDisplay_UpdateTime()
 void ClockDisplay_Clear()
 {
 	GPIO_SetBits(digit_bank, digit_all);
-	GPIO_ResetBits(display_bank, numbers[ALL]);
+	GPIO_ResetBits(display_bank, numbers[NONE]);
 }
 
 void ClockDisplay_IncrementClockSegment()
@@ -128,7 +128,7 @@ uint16_t ClockDisplay_AssignTimeDigit(RTC_TimeTypeDef *time)
 	if ( GClockDisplay.currentSegment == DIGIT_H10
 			&& currentDigit == 0x0)
 	{
-		displayPins = numbers[ALL]; // despite the awkward names, this illuminates no segments
+		displayPins = numbers[NONE];
 	}
 
 	// turn on the AM/PM indicator
@@ -159,6 +159,7 @@ void ClockDisplay_AdjustFor24HMode(RTC_TimeTypeDef *time)
 	{
 		time->RTC_Hours = 0x00;
 	}
+
 	// shift 12->11pm to 12h->23h
 	if (time->RTC_H12 == RTC_H12_PM)
 	{
@@ -238,7 +239,7 @@ uint16_t ClockDisplay_AssignTimeDigitMinSec(RTC_TimeTypeDef *time)
 	if ( (GClockDisplay.currentSegment == DIGIT_H10)
 		&& (currentDigit == 0x0) )
 		{
-			displayPins = numbers[ALL]; // despite the awkward names, this illuminates no segments
+			displayPins = numbers[NONE]; // despite the awkward names, this illuminates no segments
 		}
 
 	return displayPins;
@@ -254,7 +255,7 @@ uint16_t ClockDisplay_DetermineBlinkBehavior(uint16_t displayPins)
 	if (GClockDisplay.isDisplayBlinking == true
 			&& GClockDisplay.blinkCounter < 250)
 	{
-		displayPins = numbers[ALL];
+		displayPins = numbers[NONE];
 	}
 	// blink the colon but not the
 	else if (GClockDisplay.currentSegment == DIGIT_COLON
@@ -262,14 +263,14 @@ uint16_t ClockDisplay_DetermineBlinkBehavior(uint16_t displayPins)
 			&& GState.isAlarmSet == true
 			&& GClockDisplay.isColonBlinking == true)
 	{
-		displayPins = numbers[ALL] & ~(numbers[ALARM]);
+		displayPins = numbers[NONE] & ~(numbers[ALARM]);
 	}
 	else if (GClockDisplay.currentSegment == DIGIT_COLON
 			&& GClockDisplay.blinkCounter < 250
 			&& GState.isAlarmSet == false
 			&& GClockDisplay.isColonBlinking == true)
 	{
-		displayPins = numbers[ALL];
+		displayPins = numbers[NONE];
 	}
 
 	return displayPins;

@@ -27,5 +27,6 @@ int audioToMp3(void);
 volatile int snoozeMemory;
 volatile int exitMp3;
 volatile int mp3PlayingFlag;
+volatile int safelyExitMp3;
 
 #endif /* AUDIOMP3_H_ */

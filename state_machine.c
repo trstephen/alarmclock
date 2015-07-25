@@ -123,5 +123,13 @@ void State_PlayAux()
 
 void State_AlarmActive()
 {
+	/* start music playing */
 
+	GClockDisplay.isDisplayBlinking = true;
+
+	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_Snooze, ButtonFunc_DisableAlarm);
 }

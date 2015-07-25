@@ -23,7 +23,7 @@ enum extraNumbers {
 		COLON = 10,
 		AM_PM,
 		ALARM,
-		ALL,
+		NONE,
 };
 
 // a sum of pins needed to display numbers 0-9. Array index corresponds to display number
@@ -41,7 +41,7 @@ static const uint16_t numbers[14] = {
 /* COLON */ GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13,
 /* AM_PM */ GPIO_Pin_13,
 /* ALARM */ GPIO_Pin_8,
-/* ALL */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
+/* NONE */	GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13
 };
 
 // Digits on the clock display
