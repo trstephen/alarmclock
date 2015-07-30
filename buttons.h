@@ -3,11 +3,11 @@
  author:	T. Stephen
  date: 		9 July, 2015
  descr:		Provides button debouncing with a mixture of polling and timer
- 					interrupts. It is able to discriminate between a short button press
-					and a long (greater than one second) press. Each button has a
-					shortPress_func and a longPress_func which are set by the state
-					machine. All button actions are defined in buttons.c and are prefixed
-					ButtonFunc_
+ 			interrupts. It is able to discriminate between a short button press
+			and a long (greater than one second) press. Each button has a
+			shortPress_func and a longPress_func which are set by the state
+			machine. All button actions are defined in buttons.c and are prefixed
+			ButtonFunc_
  ******************************************************************************/
 
 #ifndef BUTTONS_H_
@@ -142,8 +142,6 @@ void Buttons_SetTimerState(TIM_TypeDef *TIMx, FunctionalState newState);
  */
 FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx);
 
-void ButtonFunc_DisplayRTC();
-
 /*
 	ButtonFunc_Disabled
 
@@ -258,6 +256,15 @@ void ButtonFunc_DisableAlarm();
 	descr:	Starts and stops music playback from the mp3 decoder.
 */
 void ButtonFunc_ToggleMusic();
+
+/*
+	ButtonFunc_ToggleMusic
+
+	input:	none
+	output:	none
+	descr:	Starts and stops music playback from the mp3 decoder.
+*/
+void ButtonFunc_ToggleAuxInput();
 
 // some debug functions
 void ButtonFunc_ToggleRedLED();

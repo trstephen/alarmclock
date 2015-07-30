@@ -39,7 +39,19 @@ static bool fill_mp3_buffer(FIL *fp, int buffer_number, bool reset);
 static void play_mp3(char* filename);
 static FRESULT play_directory (const char* path, unsigned char seek);
 
+void Audio_Start()
+{
+	mp3PlayingFlag = 1;
+	exitMp3 = 0;
+	GPIO_ResetBits(GPIOD, GPIO_Pin_6); // enable LM386
+}
 
+void Audio_Stop()
+{
+	mp3PlayingFlag = 0;
+	exitMp3 = 1;
+	GPIO_SetBits(GPIOD, GPIO_Pin_6); // disable LM386
+}
 
 /*
  * Main function. Called when startup code is done with
@@ -438,13 +450,13 @@ static void AudioCallback(void *context, int buffer) {
 	if (buffer) {
 
 		samples = audio_buffer0;
-		GPIO_SetBits(GPIOD, GPIO_Pin_13);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
+//		GPIO_SetBits(GPIOD, GPIO_Pin_13); // neat for debugging but the flickering is audible on the speaker
+//		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 	} else {
 
 		samples = audio_buffer1;
-		GPIO_SetBits(GPIOD, GPIO_Pin_14);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
+//		GPIO_SetBits(GPIOD, GPIO_Pin_14);
+//		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
 	}
 
 

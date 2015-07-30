@@ -3,12 +3,12 @@
  	author:	T. Stephen
  	date: 	7 June, 2015
  	descr:	Handles all behavior for the LED clock display. It translates a
-					RTC_TimeTypeDef into the correct combination of display segments.
-					Since the RTC clock is always in 12 hour mode, the display library
-					creates 24 hour mode by altering the display of the RTC clock rather
-					than its value or operating mode. GClockDisplay.getTime_func can
-					be changed by the state machine to display the current RTC value or
-					the value for time or alarm setting.
+			RTC_TimeTypeDef into the correct combination of display segments.
+			Since the RTC clock is always in 12 hour mode, the display library
+			creates 24 hour mode by altering the display of the RTC clock rather
+			than its value or operating mode. GClockDisplay.getTime_func can
+			be changed by the state machine to display the current RTC value or
+			the value for time or alarm setting.
  ******************************************************************/
 
 #include "clock_display.h"
@@ -60,12 +60,6 @@ static const GPIO_TypeDef* digit_bank = GPIOD;
 static const GPIO_TypeDef* display_bank = GPIOE;
 
 // Digits on the clock display
-// #defines are used because switch statements need a runtime constant (static const aren't runtime constants :( )
-#define DIGIT_H10 (GPIO_Pin_11)
-#define DIGIT_H01 (GPIO_Pin_10)
-#define DIGIT_COLON (GPIO_Pin_9)
-#define DIGIT_M10 (GPIO_Pin_8)
-#define DIGIT_M01 (GPIO_Pin_7)
 static const uint16_t digit_all = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;
 
 /****************

@@ -30,7 +30,6 @@ int interruptOccurred = 0;
 extern volatile int exitMp3 = 0;
 extern volatile int mp3PlayingFlag = 0;
 extern volatile int snoozeMemory = 0;
-//extern volatile int safelyExitMp3 = 0;
 
 /*
  * My code starts here
@@ -57,7 +56,7 @@ volatile Button_T GBtn_Music = {
 	.isPressed = false,
 	.isLongPress = false,
 	.shortPress_func = ButtonFunc_ToggleMusic,
-	.longPress_func = ButtonFunc_Disabled
+	.longPress_func = ButtonFunc_ToggleAuxInput
 };
 
 volatile Button_T GBtn_Hour = {
@@ -100,24 +99,28 @@ int main(void)
 {
 	configuration();
 
-	// set audio enable pin to LOW to turn on LM386
-	GPIO_ResetBits(GPIOD, GPIO_Pin_6);
+#if 0
+	// set audio enable pin to HIGH to turn off LM386
+	GPIO_SetBits(GPIOD, GPIO_Pin_6);
 
 
 
 	while ( 1 )
 	{
+		mp3PlayingFlag = 1;
+		audioToMp3();
+	}
+#else
+	Audio_Stop();
 
-//		State_UpdateState();
-
-//		mp3PlayingFlag = 1;
-//		audioToMp3();
-
+	while (1)
+	{
 		if (mp3PlayingFlag)
 		{
 			audioToMp3();
 		}
 	}
+#endif
 }
 
 //timer interrupt handler that is called at a rate of 500Hz
@@ -147,7 +150,7 @@ void TIM5_IRQHandler(void)
 void RTC_Alarm_IRQHandler(void)
 {
 
-	//resets alarm flags and sets flag to play mp3
+	// Alarm handler
 	if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
 	{
 		GState.nextState = ALARM_ACTIVE;
@@ -156,6 +159,16 @@ void RTC_Alarm_IRQHandler(void)
 		RTC_ClearITPendingBit(RTC_IT_ALRA);
 		EXTI_ClearITPendingBit(EXTI_Line17);
 		interruptOccurred = 1;
+	}
+
+	// snooze handler
+	if(RTC_GetITStatus(RTC_IT_ALRB) != RESET)
+	{
+		GState.nextState = ALARM_ACTIVE;
+
+		RTC_ClearFlag(RTC_FLAG_ALRBF);
+		RTC_ClearITPendingBit(RTC_IT_ALRB);
+		EXTI_ClearITPendingBit(EXTI_Line17);
 	}
 }
 
@@ -228,7 +241,7 @@ void configuration(void)
 	RTC_Init(&myclockInitTypeStruct);
 
 	// initial time: 12:00 PM
-	initTime.RTC_H12 = RTC_H12_PM;
+	initTime.RTC_H12 = RTC_H12_AM;
 	initTime.RTC_Hours = 0x012;
 	initTime.RTC_Minutes = 0x00;
 	initTime.RTC_Seconds = 0x00;
@@ -253,6 +266,7 @@ void configuration(void)
 
 	//enables RTC alarm A interrupt
 	RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+	RTC_ITConfig(RTC_IT_ALRB, ENABLE);
 
 	Buttons_Init();
 

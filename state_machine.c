@@ -1,13 +1,14 @@
 /*******************************************************************************
- 	file: 	state_machine.c
+ 	file: 	state_machine.h
  	author:	T. Stephen
  	date: 	17 July, 2015
 	descr:	Provides variables to maintain the machine state. When the state
-					changes, the button functions and clock behavior are changed.
-					Other activities which do not require buttons to be remapped are
-					encapsulated in a ButtonFunc_.
+			changes, the button functions and clock behavior are changed.
+			Other activities which do not require buttons to be remapped are
+			encapsulated in a ButtonFunc_.
  ******************************************************************************/
 
+#include "audioMP3.h"
 #include "buttons.h"
 #include "clock_display.h"
 #include "state_machine.h"
@@ -25,6 +26,7 @@ extern volatile Button_T GBtn_Alarm;
 extern volatile ClockDisplay_T GClockDisplay;
 extern volatile RTC_TimeTypeDef GNewTime;
 extern volatile RTC_AlarmTypeDef GAlarm;
+extern volatile int mp3PlayingFlag;
 volatile State_T GState;
 
 /****************
@@ -53,12 +55,6 @@ void State_UpdateState()
 			case GET_ALARM_TIME:
 				State_GetAlarmTime();
 				break;
-			case PLAY_MP3:
-				State_PlayMP3();
-				break;
-			case PLAY_AUX:
-				State_PlayAux();
-				break;
 			case ALARM_ACTIVE:
 				State_AlarmActive();
 				break;
@@ -83,7 +79,7 @@ void State_DisplayRTC()
 	GClockDisplay.isColonBlinking = true;
 	GClockDisplay.isDisplayBlinking = false;
 
-	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_ToggleMusic, ButtonFunc_ToggleAuxInput);
 	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_Disabled, ButtonFunc_Disabled);
 	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_Disabled, ButtonFunc_Disabled);
 	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_ToggleHourFormat, ButtonFunc_GetNewTime);
@@ -117,25 +113,15 @@ void State_GetAlarmTime()
 	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_SetAlarmTime, ButtonFunc_SetAlarmTime);
 }
 
-void State_PlayMP3()
-{
-
-}
-
-void State_PlayAux()
-{
-
-}
-
 void State_AlarmActive()
 {
-	/* start music playing */
+	Audio_Start();
 
 	GClockDisplay.isDisplayBlinking = true;
 
-	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Disabled, ButtonFunc_Disabled);
-	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_Disabled, ButtonFunc_Disabled);
-	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_Disabled, ButtonFunc_Disabled);
-	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_Disabled, ButtonFunc_Disabled);
+	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Snooze, ButtonFunc_Snooze);
+	State_AssignNewFunctionsToButtons(&GBtn_Hour, ButtonFunc_Snooze, ButtonFunc_Snooze);
+	State_AssignNewFunctionsToButtons(&GBtn_Minute, ButtonFunc_Snooze, ButtonFunc_Snooze);
+	State_AssignNewFunctionsToButtons(&GBtn_Time, ButtonFunc_Snooze, ButtonFunc_Snooze);
 	State_AssignNewFunctionsToButtons(&GBtn_Alarm, ButtonFunc_Snooze, ButtonFunc_DisableAlarm);
 }

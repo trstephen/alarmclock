@@ -3,9 +3,9 @@
  	author:	T. Stephen
  	date: 	17 July, 2015
 	descr:	Provides variables to maintain the machine state. When the state
-					changes, the button functions and clock behavior are changed.
-					Other activities which do not require buttons to be remapped are
-					encapsulated in a ButtonFunc_.
+			changes, the button functions and clock behavior are changed.
+			Other activities which do not require buttons to be remapped are
+			encapsulated in a ButtonFunc_.
  ******************************************************************************/
 #ifndef STATE_MACHINE_H_
 #define STATE_MACHINE_H_
@@ -19,8 +19,6 @@ enum states  {
 		DISPLAY_RTC = 0,
 		GET_NEW_TIME,
 		GET_ALARM_TIME,
-		PLAY_MP3,
-		PLAY_AUX,
 		ALARM_ACTIVE
 };
 

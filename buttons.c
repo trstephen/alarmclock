@@ -3,12 +3,13 @@
  author:	T. Stephen
  date: 		9 July, 2015
  descr:		Provides button debouncing with a mixture of polling and timer
- 					interrupts. It is able to discriminate between a short button press
-					and a long (greater than one second) press. Each button has a
-					shortPress_func and a longPress_func which are set by the state
-					machine. All button actions are defined in buttons.c and are prefixed
-					ButtonFunc_
+ 			interrupts. It is able to discriminate between a short button press
+			and a long (greater than one second) press. Each button has a
+			shortPress_func and a longPress_func which are set by the state
+			machine. All button actions are defined in buttons.c and are prefixed
+			ButtonFunc_
  ******************************************************************************/
+#include "audioMP3.h"
 #include "buttons.h"
 #include "clock_display.h"
 #include "misc.h"
@@ -18,6 +19,9 @@
 /****************
 *	Global Variables
 *****************/
+extern volatile RTC_TimeTypeDef GNewTime;
+extern volatile RTC_AlarmTypeDef GAlarm;
+extern volatile ClockDisplay_T GClockDisplay;
 extern volatile State_T GState;
 extern volatile Button_T GBtn_Music;
 extern volatile Button_T GBtn_Hour;
@@ -26,7 +30,6 @@ extern volatile Button_T GBtn_Time;
 extern volatile Button_T GBtn_Alarm;
 extern volatile int mp3PlayingFlag;
 extern volatile int exitMp3;
-//volatile int safelyExitMp3;
 
 /****************
 *	Constants
@@ -300,11 +303,6 @@ FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx)
 	return returnState;
 }
 
-void ButtonFunc_DisplayRTC()
-{
-
-}
-
 void ButtonFunc_Disabled()
 {
 	/* do nothing */
@@ -419,13 +417,44 @@ void ButtonFunc_SetAlarmTime()
 
 void ButtonFunc_Snooze()
 {
-	/* Enable the second alarm for now + 10min */
+	Audio_Stop();
+
+	// turn off the main alarm
+	RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+	RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
+
+	// set the snooze alarm for now + 10sec
+	RTC_AlarmTypeDef snoozeAlarm = GAlarm;
+	RTC_GetTime(RTC_HourFormat_12, &snoozeAlarm.RTC_AlarmTime);
+
+	snoozeAlarm.RTC_AlarmTime.RTC_Seconds += 0x010;
+
+	// adapted from timekeeping.c
+	//allows 9 to roll over to 0 and 60 to 0
+	 if((snoozeAlarm.RTC_AlarmTime.RTC_Seconds & 0x0F) >= 0xA)
+	 {
+		 snoozeAlarm.RTC_AlarmTime.RTC_Seconds = (snoozeAlarm.RTC_AlarmTime.RTC_Seconds & 0x70 ) + 0x10;
+
+		 if((snoozeAlarm.RTC_AlarmTime.RTC_Seconds & 0x70 ) >= 0x60 )
+		 {
+			 snoozeAlarm.RTC_AlarmTime.RTC_Seconds = 0x00;
+		 }
+	 }
+	 // TODO: BUG - the rollover code does not increment the entire number so a snooze could "wrap around"
+	 // and go off just before the original alarm time.
+
+	 RTC_SetAlarm(RTC_Format_BCD, RTC_Alarm_B, &snoozeAlarm);
+	 RTC_AlarmCmd(RTC_Alarm_B, ENABLE);
+
 	GState.nextState = DISPLAY_RTC;
 }
 
 void ButtonFunc_DisableAlarm()
 {
+	Audio_Stop();
+
 	RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+	RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
 
 	GState.isAlarmSet = false;
 	GState.nextState = DISPLAY_RTC;
@@ -436,17 +465,25 @@ void ButtonFunc_ToggleMusic()
 {
 	if (mp3PlayingFlag == 0)
 	{
-		mp3PlayingFlag = 1;
-		exitMp3 = 0;
-//		safelyExitMp3 = 0;
-//		GPIO_ResetBits(GPIOD, GPIO_Pin_6);
+		Audio_Start();
 	}
 	else
 	{
-		mp3PlayingFlag = 0;
+		Audio_Stop();
+	}
+}
+
+void ButtonFunc_ToggleAuxInput()
+{
+	if (mp3PlayingFlag == 1)
+	{
 		exitMp3 = 1;
-//		safelyExitMp3 = 1;
-//		GPIO_SetBits(GPIOD, GPIO_Pin_6);
+		mp3PlayingFlag = 0;
+		// LM386 stays ON
+	}
+	else
+	{
+		GPIO_ToggleBits(GPIOD, GPIO_Pin_6);
 	}
 }
 
