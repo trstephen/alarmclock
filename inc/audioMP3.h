@@ -23,6 +23,12 @@ void TimingDelay_Decrement(void);
 void Delay(volatile uint32_t nTime);
 int audioToMp3(void);
 
+// Set the global flags to start/stop playback from audioToMp3()
+// which lives in the mail while(1) loop. Hacky, but better than
+// refactoring audioToMp3();
+void Audio_Start();
+void Audio_Stop();
+
 //volatile int snoozeButtonFlag;
 volatile int snoozeMemory;
 volatile int exitMp3;
