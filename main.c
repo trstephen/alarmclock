@@ -16,17 +16,12 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_tim.h"
 
-//structures
-RCC_ClocksTypeDef RCC_Clocks;
-GPIO_InitTypeDef	initStruct;
-TIM_TimeBaseInitTypeDef TIM_InitStruct;
-NVIC_InitTypeDef NVIC_InitStructure;
-EXTI_InitTypeDef EXTI_InitStructure;
-
-
-//function prototypes
-void configuration(void);
-
+/*
+ * Leftover junk from the demo code
+ */
+RTC_TimeTypeDef		myclockTimeStruct;
+RTC_AlarmTypeDef	AlarmStruct;
+RTC_AlarmTypeDef 	alarmMemory;
 
 //global variables
 int interruptOccurred = 0;
@@ -36,7 +31,23 @@ extern volatile int exitMp3 = 0;
 extern volatile int mp3PlayingFlag = 0;
 extern volatile int snoozeMemory = 0;
 
-volatile uint16_t currentClockSegment = DIGIT_H10;
+/*
+ * My code starts here
+*/
+extern volatile State_T GState = {
+	.currentState = DISPLAY_RTC,
+	.nextState = DISPLAY_RTC,
+	.isAlarmSet = false
+};
+
+volatile ClockDisplay_T GClockDisplay = {
+	.getTime_func = ClockDisplay_UpdateFromRTC,
+	.hourFormat = RTC_HourFormat_12,
+	.currentSegment = DIGIT_H10,
+	.isColonBlinking = true,
+	.isDisplayBlinking = true,
+	.blinkCounter = 0
+};
 
 // Global variables for buttons
 volatile Button_T GBtn_Music = {
@@ -44,8 +55,8 @@ volatile Button_T GBtn_Music = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = ButtonFunc_ToggleMusic,
+	.longPress_func = ButtonFunc_ToggleAuxInput
 };
 
 volatile Button_T GBtn_Hour = {
@@ -53,8 +64,8 @@ volatile Button_T GBtn_Hour = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = ButtonFunc_ToggleBlueLED,
+	.longPress_func = ButtonFunc_ToggleOrangeLED
 };
 
 volatile Button_T GBtn_Minute = {
@@ -62,8 +73,8 @@ volatile Button_T GBtn_Minute = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ToggleRedLED,
-	.longPress_func = State_ToggleGreenLED
+	.shortPress_func = ButtonFunc_SwapFunctions,
+	.longPress_func = ButtonFunc_Disabled
 };
 
 volatile Button_T GBtn_Time = {
@@ -71,8 +82,8 @@ volatile Button_T GBtn_Time = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ButtonDisabled,
-	.longPress_func = State_ButtonDisabled
+	.shortPress_func = ButtonFunc_ToggleHourFormat,
+	.longPress_func = ButtonFunc_GetNewTime
 };
 
 volatile Button_T GBtn_Alarm = {
@@ -80,16 +91,17 @@ volatile Button_T GBtn_Alarm = {
 	.isBeingDebounced = false,
 	.isPressed = false,
 	.isLongPress = false,
-	.shortPress_func = State_ToggleBlueLED,
-	.longPress_func = State_ToggleOrangeLED
+	.shortPress_func = ButtonFunc_ToggleAlarm,
+	.longPress_func = ButtonFunc_GetAlarmTime
 };
 
 int main(void)
 {
 	configuration();
 
-	// set audio enable pin to LOW to turn on LM386
-	GPIO_ResetBits(GPIOD, GPIO_Pin_6);
+#if 0
+	// set audio enable pin to HIGH to turn off LM386
+	GPIO_SetBits(GPIOD, GPIO_Pin_6);
 
 
 
@@ -98,6 +110,17 @@ int main(void)
 		mp3PlayingFlag = 1;
 		audioToMp3();
 	}
+#else
+	Audio_Stop();
+
+	while (1)
+	{
+		if (mp3PlayingFlag)
+		{
+			audioToMp3();
+		}
+	}
+#endif
 }
 
 //timer interrupt handler that is called at a rate of 500Hz
@@ -107,15 +130,14 @@ void TIM5_IRQHandler(void)
 {
 	int previousState = 0;
 
-//	TIM_Cmd(TIM7, ENABLE);
-
-
 	//double checks that interrupt has occurred
 	if( TIM_GetITStatus( TIM5, TIM_IT_Update ) != RESET )
 	{
-		ClockDisplay_TimeTest();
+		ClockDisplay_UpdateTime();
 
 		Buttons_PollAllButtons();
+
+		State_UpdateState();
 
 		//clears interrupt flag
 	     TIM5->SR = (uint16_t)~TIM_IT_Update;
@@ -128,109 +150,127 @@ void TIM5_IRQHandler(void)
 void RTC_Alarm_IRQHandler(void)
 {
 
-	//resets alarm flags and sets flag to play mp3
-	  if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
-	  {
-    	RTC_ClearFlag(RTC_FLAG_ALRAF);
-	    RTC_ClearITPendingBit(RTC_IT_ALRA);
-	    EXTI_ClearITPendingBit(EXTI_Line17);
-		interruptOccurred = 1;
+	// Alarm handler
+	if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
+	{
+		GState.nextState = ALARM_ACTIVE;
 
-	  }
+		RTC_ClearFlag(RTC_FLAG_ALRAF);
+		RTC_ClearITPendingBit(RTC_IT_ALRA);
+		EXTI_ClearITPendingBit(EXTI_Line17);
+		interruptOccurred = 1;
+	}
+
+	// snooze handler
+	if(RTC_GetITStatus(RTC_IT_ALRB) != RESET)
+	{
+		GState.nextState = ALARM_ACTIVE;
+
+		RTC_ClearFlag(RTC_FLAG_ALRBF);
+		RTC_ClearITPendingBit(RTC_IT_ALRB);
+		EXTI_ClearITPendingBit(EXTI_Line17);
+	}
 }
 
 
-//configures the clocks, gpio, alarm, interrupts etc.
 void configuration(void)
 {
-	  //lets the system clocks be viewed
-	  RCC_GetClocksFreq(&RCC_Clocks);
+	RCC_ClocksTypeDef RCC_Clocks;
+	GPIO_InitTypeDef initStruct;
+	TIM_TimeBaseInitTypeDef TIM_InitStruct;
+	RTC_InitTypeDef	myclockInitTypeStruct;
+	RTC_TimeTypeDef initTime;
+	NVIC_InitTypeDef NVIC_InitStructure;
+	EXTI_InitTypeDef EXTI_InitStructure;
 
-	  //enable peripheral clocks
-	  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-	  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-	  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-	  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
-	  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+	//lets the system clocks be viewed
+	RCC_GetClocksFreq(&RCC_Clocks);
 
-	  //enable the RTC
-	  PWR_BackupAccessCmd(DISABLE);
-	  PWR_BackupAccessCmd(ENABLE);
-	  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
-	  RCC_RTCCLKCmd(ENABLE);
-	  RTC_AlarmCmd(RTC_Alarm_A,DISABLE);
+	//enable peripheral clocks
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
 
-	  //Enable the LSI OSC
-	  RCC_LSICmd(ENABLE);
+	//enable the RTC
+	PWR_BackupAccessCmd(DISABLE);
+	PWR_BackupAccessCmd(ENABLE);
+	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+	RCC_RTCCLKCmd(ENABLE);
+	RTC_AlarmCmd(RTC_Alarm_A,DISABLE);
 
-	  //Wait till LSI is ready
-	  while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET);
+	//Enable the LSI OSC
+	RCC_LSICmd(ENABLE);
 
-	  //enable the external interrupt for the RTC to use the Alarm
-	  /* EXTI configuration */
-	  EXTI_ClearITPendingBit(EXTI_Line17);
-	  EXTI_InitStructure.EXTI_Line = EXTI_Line17;
-	  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-	  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
-	  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-	  EXTI_Init(&EXTI_InitStructure);
+	//Wait till LSI is ready
+	while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET);
 
-	  //set timer 5 to interrupt at a rate of 500Hz
-	  TIM_TimeBaseStructInit(&TIM_InitStruct);
-	  TIM_InitStruct.TIM_Period	=  8000;	// 500Hz
-	  TIM_InitStruct.TIM_Prescaler = 20;
-	  TIM_TimeBaseInit(TIM5, &TIM_InitStruct);
+	//enable the external interrupt for the RTC to use the Alarm
+	/* EXTI configuration */
+	EXTI_ClearITPendingBit(EXTI_Line17);
+	EXTI_InitStructure.EXTI_Line = EXTI_Line17;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTI_InitStructure);
 
-	  // Enable the TIM5 global Interrupt
-	  NVIC_Init( &NVIC_InitStructure );
-	  NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;
-	  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-      NVIC_Init( &NVIC_InitStructure );
+	//set timer 5 to interrupt at a rate of 500Hz
+	TIM_TimeBaseStructInit(&TIM_InitStruct);
+	TIM_InitStruct.TIM_Period	=  8000;	// 500Hz
+	TIM_InitStruct.TIM_Prescaler = 20;
+	TIM_TimeBaseInit(TIM5, &TIM_InitStruct);
 
-      //setup the RTC for 12 hour format
-	  myclockInitTypeStruct.RTC_HourFormat = RTC_HourFormat_12;
-	  myclockInitTypeStruct.RTC_AsynchPrediv = 127;
-	  myclockInitTypeStruct.RTC_SynchPrediv = 0x00FF;
-	  RTC_Init(&myclockInitTypeStruct);
+	// Enable the TIM5 global Interrupt
+	NVIC_Init( &NVIC_InitStructure );
+	NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init( &NVIC_InitStructure );
 
-	  //set the time displayed on power up to 12PM
-	  myclockTimeStruct.RTC_H12 = RTC_H12_PM;
-	  myclockTimeStruct.RTC_Hours = 0x012;
-	  myclockTimeStruct.RTC_Minutes = 0x00;
-	  myclockTimeStruct.RTC_Seconds = 0x00;
-	  RTC_SetTime(RTC_Format_BCD, &myclockTimeStruct);
+	//enables timer interrupt
+	TIM5->DIER |= TIM_IT_Update;
+	//enables timer
+	TIM5->CR1 |= TIM_CR1_CEN;
+
+	//setup the RTC for 12 hour format
+	myclockInitTypeStruct.RTC_HourFormat = RTC_HourFormat_12;
+	myclockInitTypeStruct.RTC_AsynchPrediv = 127;
+	myclockInitTypeStruct.RTC_SynchPrediv = 0x00FF;
+	RTC_Init(&myclockInitTypeStruct);
+
+	// initial time: 12:00 PM
+	initTime.RTC_H12 = RTC_H12_AM;
+	initTime.RTC_Hours = 0x012;
+	initTime.RTC_Minutes = 0x00;
+	initTime.RTC_Seconds = 0x00;
+	RTC_SetTime(RTC_Format_BCD, &initTime);
 
 
-	  //sets alarmA for 12:00AM, date doesn't matter
-	  AlarmStruct.RTC_AlarmTime.RTC_H12 = RTC_H12_AM;
-	  AlarmStruct.RTC_AlarmTime.RTC_Hours = 0x12;
-	  AlarmStruct.RTC_AlarmTime.RTC_Minutes = 0x00;
-	  AlarmStruct.RTC_AlarmTime.RTC_Seconds = 0x00;
-	  AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
-	  RTC_SetAlarm(RTC_Format_BCD,RTC_Alarm_A,&AlarmStruct);
+	//sets alarmA for 12:00AM, date doesn't matter
+	GAlarm.RTC_AlarmTime.RTC_H12 = RTC_H12_AM;
+	GAlarm.RTC_AlarmTime.RTC_Hours = 0x012;
+	GAlarm.RTC_AlarmTime.RTC_Minutes = 0x00;
+	GAlarm.RTC_AlarmTime.RTC_Seconds = 0x000;
+	GAlarm.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
+	RTC_SetAlarm(RTC_Format_BCD,RTC_Alarm_A,&GAlarm);
 
-	  // Enable the Alarm global Interrupt
-	  NVIC_Init( &NVIC_InitStructure );
-	  NVIC_InitStructure.NVIC_IRQChannel = RTC_Alarm_IRQn;
-	  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	  NVIC_Init( &NVIC_InitStructure );
+	// Enable the Alarm global Interrupt
+	NVIC_Init( &NVIC_InitStructure );
+	NVIC_InitStructure.NVIC_IRQChannel = RTC_Alarm_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init( &NVIC_InitStructure );
 
-	  Buttons_Init();
+	//enables RTC alarm A interrupt
+	RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+	RTC_ITConfig(RTC_IT_ALRB, ENABLE);
 
-	  Audio_Init();
+	Buttons_Init();
 
-	  ClockDisplay_Init();
+	Audio_Init();
 
-	  //enables RTC alarm A interrupt
-	  RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-
-	  //enables timer interrupt
-	  TIM5->DIER |= TIM_IT_Update;
-
-	  //enables timer
-	  TIM5->CR1 |= TIM_CR1_CEN;
+	ClockDisplay_Init();
 }

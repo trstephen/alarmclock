@@ -7,6 +7,9 @@
 #include "audioMP3.h"
 #include "main.h"
 
+extern RTC_TimeTypeDef		myclockTimeStruct;
+extern RTC_AlarmTypeDef	AlarmStruct;
+
 void timeHourCheck(void);
 void timeMinuteCheck(void);
 void alarmHourCheck(void);
