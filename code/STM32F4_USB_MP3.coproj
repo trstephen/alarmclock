@@ -46,7 +46,7 @@
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
         </MemoryAreas>
-        <LocateLinkFile path="../../../../../../coocox/coide/configuration/programdata/stm32f4_usb_mp3/arm-gcc-link.ld" type="0"/>
+        <LocateLinkFile path="../../../../../../../coocox/coide/configuration/programdata/stm32f4_usb_mp3/arm-gcc-link.ld" type="0"/>
       </Link>
       <Output>
         <Option name="OutputFileType" value="0"/>
@@ -91,8 +91,8 @@
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_hcd_int.c" path="STM32_USB_OTG_Driver/src/usb_hcd_int.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_usart.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_tim.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c" type="1"/>
-    <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_stdreq.c" path="STM32_USB_HOST_Library/Core/src/usbh_stdreq.c" type="1"/>
     <File name="audio/helix/pub/bitstream.c" path="helix/real/bitstream.c" type="1"/>
+    <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_stdreq.c" path="STM32_USB_HOST_Library/Core/src/usbh_stdreq.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_core.c" path="STM32_USB_HOST_Library/Core/src/usbh_core.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_dac.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c" type="1"/>
     <File name="core/FAT_FS/fattime.c" path="fat_fs/src/fattime.c" type="1"/>
@@ -161,10 +161,10 @@
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_bsp.c" path="usb_bsp.c" type="1"/>
     <File name="audio/helix/pub/dct32.c" path="helix/real/dct32.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_usr.c" path="usbh_usr.c" type="1"/>
-    <File name="audio/helix/pub/stproc.c" path="helix/real/stproc.c" type="1"/>
-    <File name="audio/helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/MSC/usbh_msc_bot.c" path="STM32_USB_HOST_Library/Class/MSC/src/usbh_msc_bot.c" type="1"/>
+    <File name="audio/helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="core/cmsis_boot/startup_stm32f4xx.c" path="cmsis_boot/startup_stm32f4xx.c" type="1"/>
+    <File name="audio/helix/pub/stproc.c" path="helix/real/stproc.c" type="1"/>
     <File name="STM32_bsp" path="" type="2"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/MSC" path="" type="2"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>

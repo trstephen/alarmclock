@@ -1,5 +1,5 @@
 # Compiled output
-STM32F4_USB_MP3/*
+code/STM32F4_USB_MP3/*
 *.ld
 helix/Makefile
 
