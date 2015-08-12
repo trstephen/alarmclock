@@ -35,11 +35,23 @@ bool                    running_player;
 static void AudioCallback(void *context,int buffer);
 static uint32_t Mp3ReadId3V2Tag(FIL* pInFile, char* pszArtist,
 		uint32_t unArtistSize, char* pszTitle, uint32_t unTitleSize);
-static bool fill_mp3_buffer(FIL *fp, int buffer_number);
+static bool fill_mp3_buffer(FIL *fp, int buffer_number, bool reset);
 static void play_mp3(char* filename);
 static FRESULT play_directory (const char* path, unsigned char seek);
 
+void Audio_Start()
+{
+	mp3PlayingFlag = 1;
+	exitMp3 = 0;
+	GPIO_ResetBits(GPIOD, GPIO_Pin_6); // enable LM386
+}
 
+void Audio_Stop()
+{
+	mp3PlayingFlag = 0;
+	exitMp3 = 1;
+	GPIO_SetBits(GPIOD, GPIO_Pin_6); // disable LM386
+}
 
 /*
  * Main function. Called when startup code is done with
@@ -218,7 +230,7 @@ static int fill_wav_buffer(FIL *fp) {
 }
 */
 
-static bool fill_mp3_buffer(FIL *fp, int buffer_number) {
+static bool fill_mp3_buffer(FIL *fp, int buffer_number, bool reset) {
 
 	unsigned int   br;
 	unsigned int   btr;
@@ -236,13 +248,20 @@ static bool fill_mp3_buffer(FIL *fp, int buffer_number) {
 	FRESULT res;
 	int offset,err;
 	bool out_of_data = false;
-
+    int dc_offset;
 	int copy_samples;
 
 	int i;
 
+	if ( reset ) {
+		file_read_ptr = file_read_buffer;
+		file_bytes = 0;
+	}
+
 	// Turn on blue LED to indicate decoding start.
 	GPIO_SetBits(GPIOD, GPIO_Pin_15);
+
+	audio_buffer_length[ buffer_number ] = 0;
 
 	do {
 		if ( need_data ) {
@@ -310,7 +329,8 @@ static bool fill_mp3_buffer(FIL *fp, int buffer_number) {
 
 			// Duplicate data in case of mono to maintain playback speed
 			if (mp3FrameInfo.nChans == 1) {
-				for(i = mp3FrameInfo.outputSamps;i >= 0;i--) 	{
+				dc_offset = mp3FrameInfo.outputSamps/2;
+				for(i = mp3FrameInfo.outputSamps-1;i >= 0;i--) 	{
 					audio_read_buffer[ buffer_read * AUDIO_LOCAL_BUFFER_SIZE + 2 * i]     = audio_read_buffer[ buffer_read * AUDIO_LOCAL_BUFFER_SIZE + i];
 					audio_read_buffer[ buffer_read * AUDIO_LOCAL_BUFFER_SIZE + 2 * i + 1] = audio_read_buffer[ buffer_read * AUDIO_LOCAL_BUFFER_SIZE + i];
 				}
@@ -318,9 +338,10 @@ static bool fill_mp3_buffer(FIL *fp, int buffer_number) {
 			}
 
 			audio_buffer_length[ buffer_number ] = mp3FrameInfo.outputSamps;
+
 		}
 
-	} while( offset < 0 && res == FR_OK && !out_of_data );
+	} while( res == FR_OK && !out_of_data && ( offset < 0 || audio_buffer_length[ buffer_number ] == 0 ) );
 
 	// Turn off blue LED to indicate decoding finish.
 	GPIO_ResetBits(GPIOD, GPIO_Pin_15);
@@ -345,12 +366,12 @@ static void play_mp3(char* filename) {
 		///////////////////////////////////////////////////////////buffer starts getting filled for first time
 		// Start Initial fill of buffer
 		hMP3Decoder = MP3InitDecoder();
-		for (cc = 0 ; cc < NUMBER_BUFFERS ; cc++ ) {
-			out_of_data = fill_mp3_buffer(&file,cc);
-
+		out_of_data = fill_mp3_buffer(&file,0,true);
+		for (cc = 1 ; cc < NUMBER_BUFFERS ; cc++ ) {
 			if ( out_of_data ) {
-				break;
+							break;
 			}
+			out_of_data = fill_mp3_buffer(&file,cc,false);
 		}
 
 		// Initialize buffer counters
@@ -373,7 +394,7 @@ static void play_mp3(char* filename) {
 
 
 				// Refill the MP3 buffer
-				out_of_data = fill_mp3_buffer(&file,buffer_write);
+				out_of_data = fill_mp3_buffer(&file,buffer_write,false);
 
 				if ( !out_of_data ) {
 					buffer_write = ( buffer_write + 1 ) % NUMBER_BUFFERS;
@@ -391,6 +412,7 @@ static void play_mp3(char* filename) {
 
 					// Close currently open file
 					f_close(&file);
+					MP3FreeDecoder(hMP3Decoder);
 					return;
 				}
 
@@ -428,18 +450,20 @@ static void AudioCallback(void *context, int buffer) {
 	if (buffer) {
 
 		samples = audio_buffer0;
-		GPIO_SetBits(GPIOD, GPIO_Pin_13);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
+//		GPIO_SetBits(GPIOD, GPIO_Pin_13); // neat for debugging but the flickering is audible on the speaker
+//		GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 	} else {
 
 		samples = audio_buffer1;
-		GPIO_SetBits(GPIOD, GPIO_Pin_14);
-		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
+//		GPIO_SetBits(GPIOD, GPIO_Pin_14);
+//		GPIO_ResetBits(GPIOD, GPIO_Pin_13);
 	}
 
 
 	// Determine number of samples to copy
 	copy_samples = audio_buffer_length[buffer_read];
+
+
 	if ( copy_samples > AUDIO_INT_BUFFER ) {
 		copy_samples = AUDIO_INT_BUFFER;
 	}
@@ -449,11 +473,11 @@ static void AudioCallback(void *context, int buffer) {
 
 	//changes data from 16 to 12 bits and level shifts so that it is never below 0.
 	samplesmath = samples;
-
 	for(loop=0;loop<copy_samples;loop++)
 	{
-		*samplesmath = (*samplesmath/16) + 2048;
+		*samplesmath = (*samplesmath >> 4 ) + 2048;
 		samplesmath++;
+
 	}
 
 
@@ -467,10 +491,6 @@ static void AudioCallback(void *context, int buffer) {
 		samplesmath++;
 		temp+=2;
 	}
-
-
-
-
 
 	buffer_read = ( buffer_read + 1 ) % NUMBER_BUFFERS;
 

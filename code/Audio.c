@@ -87,6 +87,20 @@ void InitializeAudio(int plln, int pllr, int i2sdiv, int i2sodd) {
 
 }
 
+void Audio_Init()
+{
+	GPIO_InitTypeDef initStruct;
+
+	//configure GPIO to enable / disable power to LM386
+	GPIO_StructInit( &initStruct );
+	initStruct.GPIO_Pin = GPIO_Pin_6;
+	initStruct.GPIO_Speed = GPIO_Speed_2MHz;
+	initStruct.GPIO_Mode = GPIO_Mode_OUT;
+	initStruct.GPIO_OType = GPIO_OType_PP;
+	initStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, &initStruct);
+}
+
 void AudioOn() {
 /*	WriteRegister(0x02, 0x9e);
 	SPI3 ->I2SCFGR = SPI_I2SCFGR_I2SMOD | SPI_I2SCFGR_I2SCFG_1
