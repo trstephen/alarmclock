@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 5 5
 Title ""
-Date "19 jun 2015"
+Date "30 jun 2015"
 Rev ""
 Comp ""
 Comment1 ""
@@ -83,11 +83,11 @@ Text GLabel 3900 3850 2    30   Input ~ 0
 PE12
 Text GLabel 4100 3900 2    30   Input ~ 0
 PE13
-Text GLabel 2000 3000 0    30   Output ~ 0
+Text GLabel 4100 2300 2    30   Output ~ 0
 PD8
 Text GLabel 3900 2350 2    30   Output ~ 0
 PD9
-Text GLabel 2000 3100 0    30   Output ~ 0
+Text GLabel 4100 2400 2    30   Output ~ 0
 PD10
 Text GLabel 3900 2450 2    30   Output ~ 0
 PD11
@@ -246,7 +246,6 @@ NoConn ~ 2000 3900
 NoConn ~ 2000 3850
 NoConn ~ 2000 3800
 NoConn ~ 2000 3750
-NoConn ~ 2000 3700
 NoConn ~ 2000 3650
 NoConn ~ 2000 3600
 NoConn ~ 2000 3550
@@ -287,8 +286,6 @@ NoConn ~ 3900 2000
 NoConn ~ 3900 2050
 NoConn ~ 3900 2100
 NoConn ~ 3900 2150
-NoConn ~ 3900 2300
-NoConn ~ 3900 2400
 NoConn ~ 3900 2500
 NoConn ~ 3900 2550
 NoConn ~ 3900 2600
@@ -307,4 +304,12 @@ To 3.5mm audio jack
 NoConn ~ 2000 3150
 Text GLabel 3200 1500 1    30   Output ~ 0
 3V_205
+NoConn ~ 2000 3000
+NoConn ~ 2000 3100
+Wire Wire Line
+	3900 2300 4100 2300
+Wire Wire Line
+	3900 2400 4100 2400
+Text GLabel 2000 3700 0    30   Output ~ 0
+PA4
 $EndSCHEMATC

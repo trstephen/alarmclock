@@ -13,7 +13,7 @@ Detail the four main components of the circuit design:
 
 The files will open natively in  [KiCad](http://www.kicad-pcb.org/display/KICAD/KiCad+EDA+Software+Suite).
 
-Printable schematics, with some helpful notes, are [here](alarmclock/blob/master/kicad/schematic.pdf).
+Printable schematics, with some helpful notes, are [here](kicad/schematic.pdf).
 
 *TODO*: Include files for the PCB.
 
@@ -30,9 +30,6 @@ The included `.coproj` file will open the project in [CoIDE](http://www.coocox.o
 
 **Known Issues**
 
-* Errors on the schematic
-  * PA4 missing on I/O sheet
-  * PD8, PD10 connected to wrong pin
 * mp3 playback
   * Only works with 128kb/s encoding
   * Stops playback after ~2min and needs to be hard reset before playback can continue

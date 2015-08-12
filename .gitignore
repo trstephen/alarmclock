@@ -18,6 +18,10 @@ helix/*/CVS
 # KiCAD autosave files
 _autosave-*
 
+# KiCAD backups
+kicad/*.bak
+kicad/*backup*
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
