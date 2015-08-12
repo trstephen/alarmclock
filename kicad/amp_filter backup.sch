@@ -1,0 +1,335 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:special
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:alarm_clock-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L LM386 Audio2
+U 1 1 557B9F18
+P 3450 3150
+F 0 "Audio2" H 3700 3350 60  0000 C CNN
+F 1 "LM386" H 3600 3450 60  0000 C CNN
+F 2 "" H 3450 3150 60  0000 C CNN
+F 3 "" H 3450 3150 60  0000 C CNN
+	1    3450 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR03
+U 1 1 557BA073
+P 2950 3250
+F 0 "#PWR03" H 2950 3000 50  0001 C CNN
+F 1 "GND" H 2950 3100 50  0000 C CNN
+F 2 "" H 2950 3250 60  0000 C CNN
+F 3 "" H 2950 3250 60  0000 C CNN
+	1    2950 3250
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR04
+U 1 1 557BA088
+P 3350 3550
+F 0 "#PWR04" H 3350 3300 50  0001 C CNN
+F 1 "GND" H 3350 3400 50  0000 C CNN
+F 2 "" H 3350 3550 60  0000 C CNN
+F 3 "" H 3350 3550 60  0000 C CNN
+	1    3350 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R12
+U 1 1 557BA3B3
+P 2700 4100
+F 0 "R12" H 2900 4100 50  0000 C CNN
+F 1 "10k" V 2700 4100 50  0000 C CNN
+F 2 "" V 2630 4100 30  0000 C CNN
+F 3 "" H 2700 4100 30  0000 C CNN
+	1    2700 4100
+	0    -1   -1   0   
+$EndComp
+$Comp
+L R R11
+U 1 1 557BBDA2
+P 2500 2750
+F 0 "R11" V 2580 2750 50  0000 C CNN
+F 1 "10k" V 2500 2750 50  0000 C CNN
+F 2 "" V 2430 2750 30  0000 C CNN
+F 3 "" H 2500 2750 30  0000 C CNN
+	1    2500 2750
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR05
+U 1 1 557BC0AE
+P 2000 3250
+F 0 "#PWR05" H 2000 3000 50  0001 C CNN
+F 1 "GND" H 2000 3100 50  0000 C CNN
+F 2 "" H 2000 3250 60  0000 C CNN
+F 3 "" H 2000 3250 60  0000 C CNN
+	1    2000 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L C Capacitor1
+U 1 1 557BC0F4
+P 2000 2100
+F 0 "Capacitor1" H 2050 2300 50  0000 L CNN
+F 1 "0.01uF" H 2025 2000 50  0000 L CNN
+F 2 "" H 2038 1950 30  0000 C CNN
+F 3 "" H 2000 2100 60  0000 C CNN
+	1    2000 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C1
+U 1 1 557BC2CC
+P 2800 2400
+F 0 "C1" H 2825 2500 50  0000 L CNN
+F 1 "800pF" H 2825 2300 50  0000 L CNN
+F 2 "" H 2838 2250 30  0000 C CNN
+F 3 "" H 2800 2400 60  0000 C CNN
+	1    2800 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR06
+U 1 1 557BC350
+P 2800 2200
+F 0 "#PWR06" H 2800 1950 50  0001 C CNN
+F 1 "GND" H 2800 2050 50  0000 C CNN
+F 2 "" H 2800 2200 60  0000 C CNN
+F 3 "" H 2800 2200 60  0000 C CNN
+	1    2800 2200
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	3450 3850 3450 3550
+Wire Wire Line
+	2850 4100 3150 4100
+Wire Wire Line
+	2250 4100 2550 4100
+Wire Wire Line
+	2950 2750 2950 3050
+Wire Wire Line
+	2650 2750 2950 2750
+Wire Wire Line
+	2800 2750 2800 2550
+Connection ~ 2800 2750
+Wire Wire Line
+	2150 2750 2350 2750
+Wire Wire Line
+	2000 2500 2000 2250
+Wire Wire Line
+	2000 3000 2000 3250
+Wire Wire Line
+	2000 1950 2000 1850
+Wire Wire Line
+	2000 1850 1850 1850
+Wire Wire Line
+	2800 2250 2800 2200
+Wire Wire Line
+	3350 2750 3350 2650
+Wire Wire Line
+	3350 2650 3900 2650
+Wire Wire Line
+	3900 2650 3900 2150
+Wire Wire Line
+	3900 2350 4050 2350
+Connection ~ 3900 2350
+$Comp
+L CP1 C2
+U 1 1 557BC4F9
+P 4200 2350
+F 0 "C2" V 4350 1750 50  0000 L CNN
+F 1 "100uF" V 4050 2250 50  0000 L CNN
+F 2 "" H 4200 2350 60  0000 C CNN
+F 3 "" H 4200 2350 60  0000 C CNN
+	1    4200 2350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4350 2350 4550 2350
+Wire Wire Line
+	4550 2350 4550 2400
+$Comp
+L GND #PWR07
+U 1 1 557BC5B0
+P 4550 2400
+F 0 "#PWR07" H 4550 2150 50  0001 C CNN
+F 1 "GND" H 4550 2250 50  0000 C CNN
+F 2 "" H 4550 2400 60  0000 C CNN
+F 3 "" H 4550 2400 60  0000 C CNN
+	1    4550 2400
+	1    0    0    -1  
+$EndComp
+Text Label 3550 3550 0    60   ~ 0
+NoConnection
+$Comp
+L R R13
+U 1 1 557BC882
+P 4550 3500
+F 0 "R13" H 4350 3400 50  0000 C CNN
+F 1 "10" V 4550 3500 50  0000 C CNN
+F 2 "" V 4480 3500 30  0000 C CNN
+F 3 "" H 4550 3500 30  0000 C CNN
+	1    4550 3500
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4550 3650 4550 3800
+Wire Wire Line
+	4550 3350 4550 3150
+Connection ~ 4550 3150
+Wire Wire Line
+	3950 3150 5000 3150
+$Comp
+L CP1 C4
+U 1 1 557BCB2B
+P 5150 3150
+F 0 "C4" V 5350 2750 50  0000 L CNN
+F 1 "220uF" V 5000 3050 50  0000 L CNN
+F 2 "" H 5150 3150 60  0000 C CNN
+F 3 "" H 5150 3150 60  0000 C CNN
+	1    5150 3150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L C C3
+U 1 1 557BCEB2
+P 4550 3950
+F 0 "C3" H 4575 4050 50  0000 L CNN
+F 1 ".047uF" H 4575 3850 50  0000 L CNN
+F 2 "" H 4588 3800 30  0000 C CNN
+F 3 "" H 4550 3950 60  0000 C CNN
+	1    4550 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 4100 4550 4250
+$Comp
+L GND #PWR08
+U 1 1 557BCF7D
+P 4550 4250
+F 0 "#PWR08" H 4550 4000 50  0001 C CNN
+F 1 "GND" H 4550 4100 50  0000 C CNN
+F 2 "" H 4550 4250 60  0000 C CNN
+F 3 "" H 4550 4250 60  0000 C CNN
+	1    4550 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 3150 5550 3150
+Wire Wire Line
+	5550 3350 5550 3700
+Text Notes 1900 4450 0    60   ~ 0
+3V = speaker off\n0V = speaker on
+Wire Wire Line
+	3450 4250 3450 4400
+$Comp
+L GND #PWR09
+U 1 1 557BD355
+P 3450 4400
+F 0 "#PWR09" H 3450 4150 50  0001 C CNN
+F 1 "GND" H 3450 4250 50  0000 C CNN
+F 2 "" H 3450 4400 60  0000 C CNN
+F 3 "" H 3450 4400 60  0000 C CNN
+	1    3450 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L BS170 Audio1
+U 1 1 557BD38D
+P 3350 4050
+F 0 "Audio1" H 3550 4125 50  0000 L CNN
+F 1 "2N7000" H 3550 4050 50  0000 L CNN
+F 2 "TO-92" H 3550 3975 50  0000 L CIN
+F 3 "" H 3350 4050 50  0000 L CNN
+	1    3350 4050
+	1    0    0    -1  
+$EndComp
+Text HLabel 1850 1850 0    60   Input ~ 0
+PA4
+Text Notes 1550 1800 0    60   ~ 0
+Audio in\n
+Text HLabel 2250 4100 0    60   Input ~ 0
+PD6
+Text Notes 1850 4000 0    60   ~ 0
+Audio disable
+$Comp
+L +5V #PWR010
+U 1 1 557DF6CC
+P 3900 2100
+F 0 "#PWR010" H 3900 1950 50  0001 C CNN
+F 1 "+5V" H 3900 2240 50  0000 C CNN
+F 2 "" H 3900 2100 60  0000 C CNN
+F 3 "" H 3900 2100 60  0000 C CNN
+	1    3900 2100
+	1    0    0    -1  
+$EndComp
+Text HLabel 2000 2500 0    60   Output ~ 0
+VOL+
+Text HLabel 2150 2750 0    60   Input ~ 0
+VOL_SEL
+Text HLabel 2000 3000 0    60   Output ~ 0
+VOL-
+Text Notes 1650 3300 1    60   ~ 0
+To volume potentiometer
+Text HLabel 5550 3150 2    60   Output ~ 0
+SPKR+
+Text HLabel 5550 3350 2    60   Input ~ 0
+SPKR-
+Text Notes 6050 3500 1    60   ~ 0
+To speaker
+$Comp
+L GND #PWR011
+U 1 1 557DF8D0
+P 5550 3700
+F 0 "#PWR011" H 5550 3450 50  0001 C CNN
+F 1 "GND" H 5550 3550 50  0000 C CNN
+F 2 "" H 5550 3700 60  0000 C CNN
+F 3 "" H 5550 3700 60  0000 C CNN
+	1    5550 3700
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
