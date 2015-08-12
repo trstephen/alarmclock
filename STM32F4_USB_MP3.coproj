@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Project version="2G - 2.0.2" name="STM32F4_USB_MP3">
   <Target name="STM32F4_USB_MP3" isCurrent="1">
-    <Device manufacturerId="9" manufacturerName="ST" chipId="261" chipName="STM32F407VG" boardId="" boardName=""/>
+    <Device manufacturerId="9" manufacturerName="ST" chipId="344" chipName="STM32F407VG" boardId="" boardName=""/>
     <BuildOption>
       <Compile>
         <Option name="OptimizationLevel" value="0"/>
@@ -77,7 +77,7 @@
       <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
-      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="./stm32f4xx_1024.elf"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F4xx_1024.elf"/>
       <Option name="org.coocox.codebugger.gdbjtag.coredebugInRamInitCommands" value="cd C:/CooCox/CoIDE/workspace/STM32F4_USB_MP3/STM32F4_USB_MP3/Debug/bin restore STM32F4_USB_MP3.elf set {unsigned int*}0xE000ED08 = 0x20000000 set $sp = {unsigned int*}0x20000000 set $pc = {unsigned int*}0x20000004 "/>
     </DebugOption>
     <ExcludeFile/>
@@ -92,8 +92,8 @@
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_usart.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_tim.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_stdreq.c" path="STM32_USB_HOST_Library/Core/src/usbh_stdreq.c" type="1"/>
-    <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_core.c" path="STM32_USB_HOST_Library/Core/src/usbh_core.c" type="1"/>
     <File name="audio/helix/pub/bitstream.c" path="helix/real/bitstream.c" type="1"/>
+    <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_core.c" path="STM32_USB_HOST_Library/Core/src/usbh_core.c" type="1"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/stm32f4xx_dac.c" path="STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c" type="1"/>
     <File name="core/FAT_FS/fattime.c" path="fat_fs/src/fattime.c" type="1"/>
     <File name="audio/STM32_USB_DEVICE/usbd_conf.h" path="inc/usbd_conf.h" type="1"/>
@@ -161,10 +161,10 @@
     <File name="STM32_bsp/STM32_USB_OTG_Driver/usb_bsp.c" path="usb_bsp.c" type="1"/>
     <File name="audio/helix/pub/dct32.c" path="helix/real/dct32.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/CORE/usbh_usr.c" path="usbh_usr.c" type="1"/>
-    <File name="core/cmsis_boot/startup_stm32f4xx.c" path="cmsis_boot/startup_stm32f4xx.c" type="1"/>
-    <File name="audio/helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="audio/helix/pub/stproc.c" path="helix/real/stproc.c" type="1"/>
+    <File name="audio/helix/pub/trigtabs_fixpt.c" path="helix/real/trigtabs_fixpt.c" type="1"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/MSC/usbh_msc_bot.c" path="STM32_USB_HOST_Library/Class/MSC/src/usbh_msc_bot.c" type="1"/>
+    <File name="core/cmsis_boot/startup_stm32f4xx.c" path="cmsis_boot/startup_stm32f4xx.c" type="1"/>
     <File name="STM32_bsp" path="" type="2"/>
     <File name="STM32_bsp/STM32_USB_HOST_Library/MSC" path="" type="2"/>
     <File name="STM32_bsp/STM32F4XX_STDPERIPH_DRIVER/misc.c" path="STM32F4xx_StdPeriph_Driver/src/misc.c" type="1"/>

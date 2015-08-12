@@ -99,19 +99,7 @@ int main(void)
 {
 	configuration();
 
-#if 0
-	// set audio enable pin to HIGH to turn off LM386
-	GPIO_SetBits(GPIOD, GPIO_Pin_6);
-
-
-
-	while ( 1 )
-	{
-		mp3PlayingFlag = 1;
-		audioToMp3();
-	}
-#else
-	Audio_Stop();
+	Audio_Stop(); // sets initial conditions for audio control flags
 
 	while (1)
 	{
@@ -120,7 +108,6 @@ int main(void)
 			audioToMp3();
 		}
 	}
-#endif
 }
 
 //timer interrupt handler that is called at a rate of 500Hz

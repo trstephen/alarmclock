@@ -117,6 +117,8 @@ void State_AlarmActive()
 {
 	Audio_Start();
 
+	GClockDisplay.getTime_func = ClockDisplay_UpdateFromRTC;
+	GClockDisplay.isColonBlinking = true;
 	GClockDisplay.isDisplayBlinking = true;
 
 	State_AssignNewFunctionsToButtons(&GBtn_Music, ButtonFunc_Snooze, ButtonFunc_Snooze);

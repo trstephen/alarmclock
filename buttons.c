@@ -293,7 +293,7 @@ void Buttons_SetTimerState(TIM_TypeDef *TIMx, FunctionalState newState)
 
 FunctionalState Buttons_GetTimerState(TIM_TypeDef *TIMx)
 {
-	FunctionalState returnState = DISABLE;
+	FunctionalState returnState = DISABLE; // until challenged
 
 	if ((TIMx->CR1 & TIM_CR1_CEN) == TIM_CR1_CEN)
 	{
@@ -385,6 +385,7 @@ void ButtonFunc_ToggleAlarm()
 	{
 		GState.isAlarmSet = false;
 		RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+		RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
 	}
 	else
 	{
@@ -403,6 +404,8 @@ void ButtonFunc_GetAlarmTime()
 
 void ButtonFunc_SetAlarmTime()
 {
+	RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+
 	GAlarm.RTC_AlarmTime = GNewTime;
 	GAlarm.RTC_AlarmTime.RTC_Seconds = 0x00;
 	GAlarm.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
